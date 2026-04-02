@@ -1,58 +1,227 @@
-<h1>Privacy Policy</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WeGig — Privacy Policy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #000000;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --accent-blue: #1e88ff;
+      --radius-lg: 20px;
+    }
 
-<p><strong>Effective date:</strong> 2 April 2026</p>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-<p>
-WeGig respects your privacy. This policy explains what information may be collected through WeGig and how it is used.
-</p>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                   "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-<h2>Information we collect</h2>
+    nav {
+      width: 100%;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+    }
 
-<ul>
-  <li>Information you provide directly, such as feedback, profile details, or messages</li>
-  <li>Basic usage data such as app activity and page visits</li>
-  <li>Device and technical information (e.g. device type, operating system)</li>
-</ul>
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.15s ease;
+    }
 
-<h2>How we use information</h2>
+    nav a:hover {
+      color: var(--text-main);
+    }
 
-<ul>
-  <li>To operate and improve the app and website</li>
-  <li>To personalise your experience (e.g. location-based features)</li>
-  <li>To review feedback and prioritise new features</li>
-  <li>To communicate with you if you contact us</li>
-</ul>
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
 
-<h2>Sharing</h2>
+    .page {
+      width: 100%;
+      max-width: 720px;
+    }
 
-<p>
-WeGig does not sell your personal data.
-</p>
+    .logo {
+      max-width: 220px;
+      width: 60%;
+      height: auto;
+      margin: 8px auto 28px;
+      display: block;
+    }
 
-<p>
-We may use trusted third-party services (such as hosting, analytics, or infrastructure providers) to operate the product.
-</p>
+    .card {
+      background: #050812;
+      border: 1px solid #1f2937;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
 
-<h2>Data storage</h2>
+    h1 {
+      font-size: 30px;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      text-align: center;
+    }
 
-<p>
-Data is stored securely and only retained as long as necessary to provide the service and improve the product.
-</p>
+    h2 {
+      font-size: 18px;
+      line-height: 1.25;
+      margin-top: 28px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
 
-<h2>Your choices</h2>
+    p, li {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
 
-<p>
-You can choose not to provide personal information. You may also request access to or deletion of your data where applicable.
-</p>
+    p + p {
+      margin-top: 14px;
+    }
 
-<h2>Contact</h2>
+    ul {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
 
-<p>
-For privacy-related questions, contact: <strong>hello@wegig.live</strong>
-</p>
+    li + li {
+      margin-top: 8px;
+    }
 
-<h2>Updates</h2>
+    .effective-date {
+      text-align: center;
+      margin-bottom: 18px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
 
-<p>
-This policy may be updated from time to time. The latest version will always be available on this page.
-</p>
+    footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      opacity: 0.75;
+    }
+
+    @media (max-width: 480px) {
+      nav {
+        gap: 16px;
+        padding: 16px;
+      }
+
+      nav a {
+        font-size: 13px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      p, li {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/story/">Story</a>
+    <a href="/feedback/">Feedback</a>
+  </nav>
+
+  <div class="container">
+    <main class="page">
+      <img src="/images/wegig-logo.png?v=2" alt="WeGig" class="logo" />
+
+      <section class="card">
+        <h1>Privacy Policy</h1>
+        <p class="effective-date"><strong>Effective date:</strong> 2 April 2026</p>
+
+        <p>
+          WeGig respects your privacy. This policy explains what information may be collected through WeGig and how it is used.
+        </p>
+
+        <h2>Information we collect</h2>
+
+        <ul>
+          <li>Information you provide directly, such as feedback, profile details, or messages</li>
+          <li>Basic usage data such as app activity and page visits</li>
+          <li>Device and technical information, such as device type and operating system</li>
+        </ul>
+
+        <h2>How we use information</h2>
+
+        <ul>
+          <li>To operate and improve the app and website</li>
+          <li>To personalise your experience, including location-based features</li>
+          <li>To review feedback and prioritise new features</li>
+          <li>To communicate with you if you contact us</li>
+        </ul>
+
+        <h2>Sharing</h2>
+
+        <p>
+          WeGig does not sell your personal data.
+        </p>
+
+        <p>
+          We may use trusted third-party services, such as hosting, analytics, or infrastructure providers, to operate the product.
+        </p>
+
+        <h2>Data storage</h2>
+
+        <p>
+          Data is stored securely and only retained as long as necessary to provide the service and improve the product.
+        </p>
+
+        <h2>Your choices</h2>
+
+        <p>
+          You can choose not to provide personal information. You may also request access to or deletion of your data where applicable.
+        </p>
+
+        <h2>Contact</h2>
+
+        <p>
+          For privacy-related questions, contact <strong>hello@wegig.live</strong>.
+        </p>
+
+        <h2>Updates</h2>
+
+        <p>
+          This policy may be updated from time to time. The latest version will always be available on this page.
+        </p>
+      </section>
+
+      <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
