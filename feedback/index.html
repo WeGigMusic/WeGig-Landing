@@ -53,7 +53,7 @@
 
     .page {
       width: 100%;
-      max-width: 720px;
+      max-width: 760px;
     }
 
     .logo {
@@ -100,29 +100,31 @@
       line-height: 1.65;
     }
 
-    p + p {
-      margin-top: 14px;
-    }
-
     .intro {
       text-align: center;
       margin-bottom: 8px;
     }
 
+    .form-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
     .form-group {
-      margin-top: 16px;
+      display: grid;
+      gap: 8px;
     }
 
     label {
-      display: block;
-      margin-bottom: 8px;
       color: var(--text-main);
       font-size: 14px;
       font-weight: 600;
     }
 
     input,
-    textarea {
+    textarea,
+    select {
       width: 100%;
       border: 1px solid #1f2937;
       border-radius: 14px;
@@ -139,22 +141,24 @@
     }
 
     input:focus,
-    textarea:focus {
+    textarea:focus,
+    select:focus {
       border-color: var(--accent-blue);
     }
 
     textarea {
-      min-height: 140px;
+      min-height: 130px;
       resize: vertical;
     }
 
     .submit-row {
-      margin-top: 18px;
+      margin-top: 4px;
       display: flex;
       justify-content: center;
     }
 
-    button {
+    button,
+    .button-like {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -169,24 +173,72 @@
       cursor: pointer;
     }
 
-    button:hover {
+    button:hover,
+    .button-like:hover {
       transform: translateY(-1px);
       border-color: var(--accent-blue);
       box-shadow: 0 10px 30px rgba(15,23,42,0.9);
     }
 
-    .idea {
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      gap: 16px;
-      align-items: start;
-      padding: 18px 0;
-      border-top: 1px solid #1f2937;
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
-    .idea:first-of-type {
-      border-top: 0;
-      padding-top: 0;
+    .helper,
+    .note {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .success {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+      color: #7dd3fc;
+      font-weight: 600;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .small-select {
+      min-width: 170px;
+      padding: 10px 12px;
+      border-radius: 999px;
+    }
+
+    .idea-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .idea {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 18px;
+      border: 1px solid #1f2937;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.3);
     }
 
     .vote-box {
@@ -195,11 +247,11 @@
       border-radius: 16px;
       padding: 12px 10px;
       text-align: center;
-      min-width: 72px;
+      min-width: 84px;
     }
 
     .vote-count {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1;
@@ -218,9 +270,25 @@
       font-size: 13px;
     }
 
-    .status {
-      display: inline-block;
+    .idea-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .idea-meta {
       margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .status,
+    .tag {
+      display: inline-block;
       padding: 6px 10px;
       border-radius: 999px;
       border: 1px solid #1f2937;
@@ -230,11 +298,15 @@
       background: #000;
     }
 
-    .note {
-      margin-top: 16px;
+    .status-open { color: #d1d5db; }
+    .status-planned { color: #93c5fd; }
+    .status-future { color: #c4b5fd; }
+    .status-under-review { color: #fcd34d; }
+
+    .empty-state {
       text-align: center;
-      font-size: 13px;
       color: var(--text-muted);
+      padding: 24px 12px 10px;
     }
 
     footer {
@@ -275,6 +347,18 @@
         width: 100%;
         max-width: 120px;
       }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .toolbar-right {
+        width: 100%;
+      }
+
+      .small-select {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -292,85 +376,75 @@
       <section class="card">
         <h1>Help shape WeGig</h1>
         <p class="intro">
-          Share ideas, suggest improvements, and help decide what gets built next.
+          Share ideas, vote on what matters, and help decide what gets built next.
         </p>
 
-        <form>
-          <div class="form-group">
-            <label for="title">Feature title</label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              placeholder="Example: Let users track setlists"
-            />
-          </div>
+        <form id="feedbackForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="title">Feature title</label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                maxlength="100"
+                placeholder="Example: Add set lists"
+                required
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="details">Why is this useful?</label>
-            <textarea
-              id="details"
-              name="details"
-              placeholder="Describe the feature, problem, or idea"
-            ></textarea>
-          </div>
+            <div class="form-group">
+              <label for="details">Why is this useful?</label>
+              <textarea
+                id="details"
+                name="details"
+                maxlength="500"
+                placeholder="Describe the feature, problem, or idea"
+                required
+              ></textarea>
+            </div>
 
-          <div class="submit-row">
-            <button type="submit">Submit feedback</button>
+            <div class="form-group">
+              <label for="status">Roadmap status</label>
+              <select id="status" name="status">
+                <option value="Open">Open</option>
+                <option value="Future">Future</option>
+                <option value="Under review">Under review</option>
+                <option value="Planned">Planned</option>
+              </select>
+            </div>
+
+            <div class="submit-row">
+              <button type="submit">Submit feedback</button>
+            </div>
           </div>
         </form>
 
-        <p class="note">
-          This is a simple first version. Real submissions and voting can be connected next.
+        <p class="helper">
+          Suggestions are saved in your browser for now. Later this can be upgraded to shared submissions.
         </p>
+
+        <div id="successMessage" class="success" style="display:none;">
+          Feedback submitted.
+        </div>
       </section>
 
       <section class="card">
-        <h2>Popular ideas</h2>
-
-        <div class="idea">
-          <div class="vote-box">
-            <div class="vote-count">12</div>
-            <div class="vote-label">votes</div>
-            <button class="vote-button" type="button">Upvote</button>
-          </div>
-          <div>
-            <h3>Track every gig you’ve attended</h3>
-            <p>
-              Build a personal live music history with venues, dates, artists, and memories all in one place.
-            </p>
-            <span class="status">Under review</span>
+        <div class="toolbar">
+          <h2>Feature requests</h2>
+          <div class="toolbar-right">
+            <select id="sortSelect" class="small-select">
+              <option value="votes">Sort: Most votes</option>
+              <option value="newest">Sort: Newest</option>
+              <option value="oldest">Sort: Oldest</option>
+            </select>
+            <button id="resetButton" type="button">Reset sample data</button>
           </div>
         </div>
 
-        <div class="idea">
-          <div class="vote-box">
-            <div class="vote-count">9</div>
-            <div class="vote-label">votes</div>
-            <button class="vote-button" type="button">Upvote</button>
-          </div>
-          <div>
-            <h3>Follow friends and see their recent gigs</h3>
-            <p>
-              Add a social layer that helps people discover artists and events through friends.
-            </p>
-            <span class="status">Planned</span>
-          </div>
-        </div>
-
-        <div class="idea">
-          <div class="vote-box">
-            <div class="vote-count">6</div>
-            <div class="vote-label">votes</div>
-            <button class="vote-button" type="button">Upvote</button>
-          </div>
-          <div>
-            <h3>Venue pages with past and upcoming events</h3>
-            <p>
-              Help fans revisit venues they love and discover what is happening there next.
-            </p>
-            <span class="status">Open</span>
-          </div>
+        <div id="ideaList" class="idea-list"></div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+          No ideas yet. Be the first to add one.
         </div>
       </section>
 
@@ -379,7 +453,252 @@
   </div>
 
   <script>
+    const STORAGE_KEY = "wegig.feedback.items.v1";
+    const VOTED_KEY = "wegig.feedback.voted.v1";
+
+    const seedIdeas = [
+      {
+        id: "seed-1",
+        title: "Future AI OCR for old tickets",
+        details: "Use AI and OCR to scan old ticket stubs and automatically turn them into logged gigs.",
+        status: "Future",
+        votes: 0,
+        createdAt: "2026-04-02T09:00:00.000Z"
+      },
+      {
+        id: "seed-2",
+        title: "Add set lists",
+        details: "Let users attach or view set lists for gigs they attended.",
+        status: "Open",
+        votes: 0,
+        createdAt: "2026-04-02T09:01:00.000Z"
+      },
+      {
+        id: "seed-3",
+        title: "Add previous gigs",
+        details: "Make it easier to backfill older gigs from years ago into a personal history.",
+        status: "Open",
+        votes: 0,
+        createdAt: "2026-04-02T09:02:00.000Z"
+      },
+      {
+        id: "seed-4",
+        title: "Add to calendar option",
+        details: "Allow users to add upcoming gigs directly to their calendar.",
+        status: "Planned",
+        votes: 0,
+        createdAt: "2026-04-02T09:03:00.000Z"
+      },
+      {
+        id: "seed-5",
+        title: "Future: share gig with friend to suggest going",
+        details: "Let users share a gig with a friend as a prompt to go together.",
+        status: "Future",
+        votes: 0,
+        createdAt: "2026-04-02T09:04:00.000Z"
+      },
+      {
+        id: "seed-6",
+        title: "Gig photo of the week",
+        details: "Highlight one user-submitted gig photo each week to create community engagement.",
+        status: "Future",
+        votes: 0,
+        createdAt: "2026-04-02T09:05:00.000Z"
+      }
+    ];
+
+    const form = document.getElementById("feedbackForm");
+    const titleInput = document.getElementById("title");
+    const detailsInput = document.getElementById("details");
+    const statusInput = document.getElementById("status");
+    const ideaList = document.getElementById("ideaList");
+    const emptyState = document.getElementById("emptyState");
+    const successMessage = document.getElementById("successMessage");
+    const sortSelect = document.getElementById("sortSelect");
+    const resetButton = document.getElementById("resetButton");
+
+    function getItems() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [...seedIdeas];
+
+      try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [...seedIdeas];
+        return parsed;
+      } catch {
+        return [...seedIdeas];
+      }
+    }
+
+    function saveItems(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function getVotedIds() {
+      const raw = localStorage.getItem(VOTED_KEY);
+      if (!raw) return [];
+
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveVotedIds(ids) {
+      localStorage.setItem(VOTED_KEY, JSON.stringify(ids));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function statusClass(status) {
+      const normalized = String(status).toLowerCase().replace(/\s+/g, "-");
+      return "status status-" + normalized;
+    }
+
+    function sortItems(items) {
+      const sortBy = sortSelect.value;
+
+      if (sortBy === "newest") {
+        return [...items].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }
+
+      if (sortBy === "oldest") {
+        return [...items].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      }
+
+      return [...items].sort((a, b) => {
+        if (b.votes !== a.votes) return b.votes - a.votes;
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    }
+
+    function renderIdeas() {
+      const items = sortItems(getItems());
+      const votedIds = getVotedIds();
+
+      if (items.length === 0) {
+        ideaList.innerHTML = "";
+        emptyState.style.display = "block";
+        return;
+      }
+
+      emptyState.style.display = "none";
+
+      ideaList.innerHTML = items.map((item) => {
+        const hasVoted = votedIds.includes(item.id);
+
+        return `
+          <article class="idea">
+            <div class="vote-box">
+              <div class="vote-count">${item.votes}</div>
+              <div class="vote-label">votes</div>
+              <button
+                class="vote-button"
+                type="button"
+                data-id="${escapeHtml(item.id)}"
+                ${hasVoted ? "disabled" : ""}
+              >
+                ${hasVoted ? "Voted" : "Upvote"}
+              </button>
+            </div>
+
+            <div>
+              <div class="idea-top">
+                <h3>${escapeHtml(item.title)}</h3>
+              </div>
+              <p>${escapeHtml(item.details)}</p>
+              <div class="idea-meta">
+                <span class="${statusClass(item.status)}">${escapeHtml(item.status)}</span>
+                <span class="tag">${new Date(item.createdAt).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric"
+                })}</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      const buttons = ideaList.querySelectorAll(".vote-button");
+      buttons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const id = this.getAttribute("data-id");
+          upvoteIdea(id);
+        });
+      });
+    }
+
+    function upvoteIdea(id) {
+      if (!id) return;
+
+      const votedIds = getVotedIds();
+      if (votedIds.includes(id)) return;
+
+      const items = getItems().map((item) => {
+        if (item.id === id) {
+          return { ...item, votes: Number(item.votes || 0) + 1 };
+        }
+        return item;
+      });
+
+      saveItems(items);
+      saveVotedIds([...votedIds, id]);
+      renderIdeas();
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const title = titleInput.value.trim();
+      const details = detailsInput.value.trim();
+      const status = statusInput.value;
+
+      if (!title || !details) return;
+
+      const items = getItems();
+      const newItem = {
+        id: "idea-" + Date.now(),
+        title,
+        details,
+        status,
+        votes: 0,
+        createdAt: new Date().toISOString()
+      };
+
+      items.unshift(newItem);
+      saveItems(items);
+
+      form.reset();
+      statusInput.value = "Open";
+      successMessage.style.display = "block";
+
+      setTimeout(() => {
+        successMessage.style.display = "none";
+      }, 1800);
+
+      renderIdeas();
+    });
+
+    sortSelect.addEventListener("change", renderIdeas);
+
+    resetButton.addEventListener("click", function () {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(VOTED_KEY);
+      renderIdeas();
+    });
+
     document.getElementById("year").textContent = new Date().getFullYear();
+    renderIdeas();
   </script>
 </body>
 </html>
