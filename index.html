@@ -22,6 +22,36 @@
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
+    }
+
+    /* ✅ NAV BAR */
+    nav {
+      width: 100%;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.15s ease;
+    }
+
+    nav a:hover {
+      color: var(--text-main);
+    }
+
+    /* ✅ CENTER CONTENT */
+    .container {
+      flex: 1;
+      display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
@@ -119,26 +149,37 @@
 </head>
 
 <body>
-  <main class="page">
-    <img src="images/wegig-logo.png?v=2" alt="WeGig" class="logo" />
 
-    <p class="tagline">Track your gigs, relive your music, discover what’s next.</p>
+  <!-- ✅ NAV -->
+  <nav>
+    <a href="/story/">Story</a>
+    <a href="/feedback/">Feedback</a>
+    <a href="/privacy/">Privacy</a>
+  </nav>
 
-    <div class="qr-wrapper">
-      <img src="images/wegig-qr.png?v=2" alt="Scan to download the WeGig app" />
-    </div>
+  <!-- ✅ CENTERED CONTENT -->
+  <div class="container">
+    <main class="page">
+      <img src="images/wegig-logo.png?v=2" alt="WeGig" class="logo" />
 
-    <p class="hint">
-      Scan the QR code or tap a store below to open WeGig on your phone once the app is live.
-    </p>
+      <p class="tagline">Track your gigs, relive your music, discover what’s next.</p>
 
-    <div class="store-buttons">
-      <a href="#"><img src="images/app-store-badge.png" alt="Download on the App Store" /></a>
-      <a href="#"><img src="images/google-play-badge.png" alt="Get it on Google Play" /></a>
-    </div>
+      <div class="qr-wrapper">
+        <img src="images/wegig-qr.png?v=2" alt="Scan to download the WeGig app" />
+      </div>
 
-    <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
-  </main>
+      <p class="hint">
+        Scan the QR code or tap a store below to open WeGig on your phone once the app is live.
+      </p>
+
+      <div class="store-buttons">
+        <a href="#"><img src="images/app-store-badge.png" alt="Download on the App Store" /></a>
+        <a href="#"><img src="images/google-play-badge.png" alt="Get it on Google Play" /></a>
+      </div>
+
+      <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
+    </main>
+  </div>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
