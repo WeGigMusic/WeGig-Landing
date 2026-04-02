@@ -1,57 +1,247 @@
-<h1>The story behind WeGig</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WeGig — Story</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #000000;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --accent-blue: #1e88ff;
+      --radius-lg: 20px;
+    }
 
-<p>
-WeGig started from a simple idea: live music is one of the most meaningful parts of people’s lives, but the memories don’t live anywhere properly.
-</p>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-<p>
-We track films, books, workouts, and places we’ve been — but gigs often disappear into old tickets, camera rolls, and half-forgotten nights.
-</p>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                   "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-<h2>Why it matters</h2>
+    nav {
+      width: 100%;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+    }
 
-<p>
-A gig is more than an event. It is where you discover artists, mark moments in your life, and share experiences with friends.
-</p>
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.15s ease;
+    }
 
-<p>
-But there’s no real home for that history.
-</p>
+    nav a:hover {
+      color: var(--text-main);
+    }
 
-<p>
-WeGig is being built to change that.
-</p>
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
 
-<h2>What WeGig is</h2>
+    .page {
+      width: 100%;
+      max-width: 720px;
+    }
 
-<p>
-WeGig is a place to track the gigs you’ve been to, relive the moments that mattered, and discover what’s next.
-</p>
+    .logo {
+      max-width: 220px;
+      width: 60%;
+      height: auto;
+      margin: 8px auto 28px;
+      display: block;
+    }
 
-<p>
-Over time, it will become:
-</p>
+    .card {
+      background: #050812;
+      border: 1px solid #1f2937;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+    }
 
-<ul>
-  <li>Your personal live music history</li>
-  <li>A way to discover gigs through friends</li>
-  <li>A new layer of social connection around music</li>
-</ul>
+    h1 {
+      font-size: 30px;
+      line-height: 1.1;
+      margin-bottom: 18px;
+      text-align: center;
+    }
 
-<h2>Built in public</h2>
+    h2 {
+      font-size: 18px;
+      line-height: 1.25;
+      margin-top: 28px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
 
-<p>
-WeGig is being built step by step, with feedback shaping what comes next.
-</p>
+    p, li {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
 
-<p>
-If there’s something you want to see, suggest it.
-</p>
+    p + p {
+      margin-top: 14px;
+    }
 
-<p>
-If something doesn’t work, say it.
-</p>
+    ul {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
 
-<p>
-This is just the beginning.
-</p>
+    li + li {
+      margin-top: 8px;
+    }
+
+    .cta {
+      margin-top: 28px;
+      text-align: center;
+    }
+
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      border-radius: 999px;
+      padding: 10px 18px;
+      border: 1px solid #fff;
+      color: var(--text-main);
+      text-decoration: none;
+      transition: 0.08s ease;
+      font-size: 14px;
+    }
+
+    .cta a:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 10px 30px rgba(15,23,42,0.9);
+    }
+
+    footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      opacity: 0.75;
+    }
+
+    @media (max-width: 480px) {
+      nav {
+        gap: 16px;
+        padding: 16px;
+      }
+
+      nav a {
+        font-size: 13px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      p, li {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/feedback/">Feedback</a>
+    <a href="/privacy/">Privacy</a>
+  </nav>
+
+  <div class="container">
+    <main class="page">
+      <img src="/images/wegig-logo.png?v=2" alt="WeGig" class="logo" />
+
+      <section class="card">
+        <h1>The story behind WeGig</h1>
+
+        <p>
+          WeGig started from a simple idea: live music is one of the most meaningful parts of people’s lives, but the memories don’t live anywhere properly.
+        </p>
+
+        <p>
+          We track films, books, workouts, and places we’ve been — but gigs often disappear into old tickets, camera rolls, and half-forgotten nights.
+        </p>
+
+        <h2>Why it matters</h2>
+
+        <p>
+          A gig is more than an event. It is where you discover artists, mark moments in your life, and share experiences with friends.
+        </p>
+
+        <p>
+          But there’s no real home for that history.
+        </p>
+
+        <p>
+          WeGig is being built to change that.
+        </p>
+
+        <h2>What WeGig is</h2>
+
+        <p>
+          WeGig is a place to track the gigs you’ve been to, relive the moments that mattered, and discover what’s next.
+        </p>
+
+        <p>Over time, it will become:</p>
+
+        <ul>
+          <li>Your personal live music history</li>
+          <li>A way to discover gigs through friends</li>
+          <li>A new layer of social connection around music</li>
+        </ul>
+
+        <h2>Built in public</h2>
+
+        <p>
+          WeGig is being built step by step, with feedback shaping what comes next.
+        </p>
+
+        <p>
+          If there’s something you want to see, suggest it.
+        </p>
+
+        <p>
+          If something doesn’t work, say it.
+        </p>
+
+        <p>
+          This is just the beginning.
+        </p>
+
+        <div class="cta">
+          <a href="/feedback/">Share feedback</a>
+        </div>
+      </section>
+
+      <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
