@@ -11,21 +11,24 @@
       --text-muted: #9ca3af;
       --accent-blue: #1e88ff;
       --radius-lg: 20px;
+      --card-bg: #050812;
+      --card-border: #1f2937;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
                    "Segoe UI", sans-serif;
-      background: #000;
+      background: var(--bg);
       color: var(--text-main);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
-    /* ✅ NAV BAR */
     nav {
       width: 100%;
       padding: 20px 24px;
@@ -35,6 +38,7 @@
       position: absolute;
       top: 0;
       left: 0;
+      z-index: 10;
     }
 
     nav a {
@@ -48,18 +52,15 @@
       color: var(--text-main);
     }
 
-    /* ✅ CENTER CONTENT */
     .container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      width: 100%;
+      padding: 96px 24px 48px;
     }
 
     .page {
       width: 100%;
-      max-width: 540px;
+      max-width: 720px;
+      margin: 0 auto;
       text-align: center;
     }
 
@@ -81,8 +82,8 @@
       display: inline-flex;
       padding: 14px;
       border-radius: var(--radius-lg);
-      background: #050812;
-      border: 1px solid #1f2937;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       margin-bottom: 24px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.7);
     }
@@ -106,22 +107,27 @@
       flex-wrap: wrap;
       gap: 12px;
       justify-content: center;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
-    .store-buttons a {
+    .store-buttons a,
+    .cta-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       background: #000;
       border-radius: 999px;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border: 1px solid #fff;
       text-decoration: none;
-      transition: 0.08s ease;
+      color: var(--text-main);
+      transition: 0.15s ease;
+      font-size: 14px;
+      cursor: pointer;
     }
 
-    .store-buttons a:hover {
+    .store-buttons a:hover,
+    .cta-button:hover {
       transform: translateY(-1px);
       border-color: var(--accent-blue);
       box-shadow: 0 10px 30px rgba(15,23,42,0.9);
@@ -133,31 +139,87 @@
       display: block;
     }
 
+    .waitlist-section {
+      margin-top: 40px;
+      padding: 28px 18px 18px;
+      border-radius: var(--radius-lg);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+    }
+
+    .waitlist-section h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .waitlist-section p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .form-frame {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      background: #fff;
+      min-height: 1600px;
+    }
+
     footer {
-      margin-top: 12px;
+      margin-top: 20px;
       font-size: 11px;
       color: var(--text-muted);
       opacity: 0.75;
     }
 
     @media (max-width: 480px) {
-      .tagline { font-size: 16px; }
-      .qr-wrapper img { width: 170px; height: 170px; }
-      .store-buttons img { height: 28px; }
+      nav {
+        gap: 18px;
+        padding: 18px 16px;
+      }
+
+      nav a {
+        font-size: 13px;
+      }
+
+      .container {
+        padding: 88px 16px 36px;
+      }
+
+      .tagline {
+        font-size: 16px;
+      }
+
+      .qr-wrapper img {
+        width: 170px;
+        height: 170px;
+      }
+
+      .store-buttons img {
+        height: 28px;
+      }
+
+      .waitlist-section h2 {
+        font-size: 22px;
+      }
+
+      .form-frame {
+        min-height: 1680px;
+      }
     }
   </style>
 </head>
 
 <body>
-
-  <!-- ✅ NAV -->
   <nav>
     <a href="/story/">Story</a>
     <a href="/feedback/">Feedback</a>
     <a href="/privacy/">Privacy</a>
   </nav>
 
-  <!-- ✅ CENTERED CONTENT -->
   <div class="container">
     <main class="page">
       <img src="images/wegig-logo.png?v=2" alt="WeGig" class="logo" />
@@ -176,6 +238,25 @@
         <a href="#"><img src="images/app-store-badge.png" alt="Download on the App Store" /></a>
         <a href="#"><img src="images/google-play-badge.png" alt="Get it on Google Play" /></a>
       </div>
+
+      <a href="#waitlist" class="cta-button">Join the Waitlist</a>
+
+      <section class="waitlist-section" id="waitlist">
+        <h2>Join the Waitlist</h2>
+        <p>Be first to hear when WeGig launches and get early access updates.</p>
+
+        <iframe
+          class="form-frame"
+          src="https://docs.google.com/forms/d/e/1FAIpQLSdGLjDmio4SYUfj3e4EaWR7H6Gh7Qolqdgf0wQik-M9cXKmVw/viewform?embedded=true"
+          width="100%"
+          height="1597"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          loading="lazy">
+          Loading…
+        </iframe>
+      </section>
 
       <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
     </main>
