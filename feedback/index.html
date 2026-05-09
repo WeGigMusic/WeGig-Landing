@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>WeGig — Feedback</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     :root {
       --bg: #000000;
@@ -13,11 +14,15 @@
       --radius-lg: 20px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-                   "Segoe UI", sans-serif;
+        "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text-main);
       min-height: 100vh;
@@ -82,16 +87,12 @@
 
     h2 {
       font-size: 18px;
-      line-height: 1.25;
       margin-bottom: 12px;
-      color: var(--text-main);
     }
 
     h3 {
       font-size: 16px;
-      line-height: 1.3;
       margin-bottom: 6px;
-      color: var(--text-main);
     }
 
     p {
@@ -117,7 +118,6 @@
     }
 
     label {
-      color: var(--text-main);
       font-size: 14px;
       font-weight: 600;
     }
@@ -133,11 +133,6 @@
       padding: 14px 16px;
       font: inherit;
       outline: none;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: #6b7280;
     }
 
     input:focus,
@@ -161,8 +156,7 @@
       justify-content: center;
     }
 
-    button,
-    .button-like {
+    button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -171,28 +165,22 @@
       padding: 10px 18px;
       border: 1px solid #fff;
       color: var(--text-main);
-      text-decoration: none;
-      transition: 0.08s ease;
       font-size: 14px;
       cursor: pointer;
+      transition: 0.08s ease;
     }
 
-    button:hover,
-    .button-like:hover {
+    button:hover {
       transform: translateY(-1px);
       border-color: var(--accent-blue);
-      box-shadow: 0 10px 30px rgba(15,23,42,0.9);
     }
 
     button:disabled {
       opacity: 0.45;
       cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
     }
 
-    .helper,
-    .note {
+    .helper {
       margin-top: 14px;
       text-align: center;
       font-size: 13px;
@@ -220,13 +208,6 @@
       flex-wrap: wrap;
     }
 
-    .toolbar-right {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
     .small-select {
       min-width: 170px;
       padding: 10px 12px;
@@ -242,7 +223,6 @@
       display: grid;
       grid-template-columns: 84px 1fr;
       gap: 16px;
-      align-items: start;
       padding: 18px;
       border: 1px solid #1f2937;
       border-radius: 18px;
@@ -255,14 +235,11 @@
       border-radius: 16px;
       padding: 12px 10px;
       text-align: center;
-      min-width: 84px;
     }
 
     .vote-count {
       font-size: 22px;
       font-weight: 800;
-      color: var(--text-main);
-      line-height: 1;
       margin-bottom: 10px;
     }
 
@@ -278,38 +255,21 @@
       font-size: 13px;
     }
 
-    .idea-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
     .idea-meta {
       margin-top: 10px;
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      align-items: center;
     }
 
     .status,
     .tag {
-      display: inline-block;
       padding: 6px 10px;
       border-radius: 999px;
       border: 1px solid #1f2937;
-      color: var(--text-muted);
       font-size: 12px;
-      font-weight: 600;
       background: #000;
     }
-
-    .status-open { color: #d1d5db; }
-    .status-planned { color: #93c5fd; }
-    .status-future { color: #c4b5fd; }
-    .status-under-review { color: #fcd34d; }
 
     .empty-state {
       text-align: center;
@@ -324,53 +284,11 @@
       color: var(--text-muted);
       opacity: 0.75;
     }
-
-    @media (max-width: 640px) {
-      nav {
-        gap: 16px;
-        padding: 16px;
-      }
-
-      nav a {
-        font-size: 13px;
-      }
-
-      .card {
-        padding: 22px;
-      }
-
-      h1 {
-        font-size: 26px;
-      }
-
-      p {
-        font-size: 14px;
-      }
-
-      .idea {
-        grid-template-columns: 1fr;
-      }
-
-      .vote-box {
-        width: 100%;
-        max-width: 120px;
-      }
-
-      .toolbar {
-        align-items: stretch;
-      }
-
-      .toolbar-right {
-        width: 100%;
-      }
-
-      .small-select {
-        width: 100%;
-      }
-    }
   </style>
 </head>
+
 <body>
+
   <nav>
     <a href="/">Home</a>
     <a href="/story/">Story</a>
@@ -379,18 +297,23 @@
 
   <div class="container">
     <main class="page">
+
       <img src="/images/wegig-logo.png?v=2" alt="WeGig" class="logo" />
 
       <section class="card">
         <h1>Help shape WeGig</h1>
+
         <p class="intro">
           Share ideas, vote on what matters, and help decide what gets built next.
         </p>
 
         <form id="feedbackForm">
+
           <div class="form-grid">
+
             <div class="form-group">
               <label for="title">Feature title</label>
+
               <input
                 id="title"
                 name="title"
@@ -403,6 +326,7 @@
 
             <div class="form-group">
               <label for="details">Why is this useful?</label>
+
               <textarea
                 id="details"
                 name="details"
@@ -412,8 +336,7 @@
               ></textarea>
             </div>
 
-            <div class="honeypot" aria-hidden="true">
-              <label for="website">Website</label>
+            <div class="honeypot">
               <input
                 id="website"
                 name="website"
@@ -424,8 +347,11 @@
             </div>
 
             <div class="submit-row">
-              <button type="submit">Submit feedback</button>
+              <button type="submit">
+                Submit feedback
+              </button>
             </div>
+
           </div>
         </form>
 
@@ -439,46 +365,95 @@
       </section>
 
       <section class="card">
+
         <div class="toolbar">
           <h2>Feature requests</h2>
-          <div class="toolbar-right">
-            <select id="sortSelect" class="small-select">
-              <option value="votes">Sort: Most votes</option>
-              <option value="newest">Sort: Newest</option>
-              <option value="oldest">Sort: Oldest</option>
-            </select>
-          </div>
+
+          <select id="sortSelect" class="small-select">
+            <option value="votes">Sort: Most votes</option>
+            <option value="newest">Sort: Newest</option>
+            <option value="oldest">Sort: Oldest</option>
+          </select>
         </div>
 
         <div id="ideaList" class="idea-list"></div>
+
         <div id="emptyState" class="empty-state" style="display:none;">
           Loading feedback...
         </div>
+
       </section>
 
-      <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
+      <footer>
+        &copy; <span id="year"></span> WeGig. All rights reserved.
+      </footer>
+
     </main>
   </div>
 
+  <!-- POSTHOG -->
+
   <script>
-    <script>
-  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){
-  function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){
-  t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript";
-  p.crossOrigin="anonymous";p.async=!0;p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js";
-  (r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);
-  var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){
-  var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){
-  return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once reset group group_once unset".split(" "),n=0;n<o.length;n++)g(u,o[n]);
-  e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    !function(t,e){
+      var o,n,p,r;
+      e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){
 
-  posthog.init("phc_zvQgDRM5mPmUp7Q23oTPYL7WYwsuSKGDTfNbkngQ2S7K", {
-    api_host: "https://eu.i.posthog.com"
-  }); 
+      function g(t,e){
+        var o=e.split(".");
+        2==o.length&&(t=t[o[0]],e=o[1]);
 
-  posthog.capture("feedback_page_viewed");
-</script>
+        t[e]=function(){
+          t.push([e].concat(Array.prototype.slice.call(arguments,0)))
+        }
+      }
+
+      (p=t.createElement("script")).type="text/javascript";
+      p.crossOrigin="anonymous";
+      p.async=!0;
+
+      p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js";
+
+      (r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);
+
+      var u=e;
+
+      for(
+        void 0!==a?u=e[a]=[]:a="posthog",
+        u.people=u.people||[],
+        u.toString=function(t){
+          var e="posthog";
+          return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e
+        },
+
+        u.people.toString=function(){
+          return u.toString(1)+".people (stub)"
+        },
+
+        o="capture identify alias people.set people.set_once reset group group_once unset".split(" "),
+        n=0;
+        n<o.length;
+        n++
+      ) g(u,o[n]);
+
+      e._i.push([i,s,a])
+
+      },e.__SV=1)
+
+    }(document,window.posthog||[]);
+
+    posthog.init("phc_zvQgDRM5mPmUp7Q23oTPYL7WYwsuSKGDTfNbkngQ2S7K", {
+      api_host: "https://eu.i.posthog.com"
+    });
+
+    posthog.capture("feedback_page_viewed");
+  </script>
+
+  <!-- MAIN APP -->
+
+  <script>
+
     const API_URL = "https://nvmviixlivbxuwfqwujx.supabase.co/functions/v1/feedback";
+
     const VOTER_KEY = "wegig.feedback.voter.v1";
     const LOCAL_VOTED_KEY = "wegig.feedback.localVotes.v1";
 
@@ -486,8 +461,10 @@
     const titleInput = document.getElementById("title");
     const detailsInput = document.getElementById("details");
     const websiteInput = document.getElementById("website");
+
     const ideaList = document.getElementById("ideaList");
     const emptyState = document.getElementById("emptyState");
+
     const successMessage = document.getElementById("successMessage");
     const sortSelect = document.getElementById("sortSelect");
 
@@ -506,11 +483,11 @@
 
     function getLocalVotedIds() {
       const raw = localStorage.getItem(LOCAL_VOTED_KEY);
+
       if (!raw) return [];
 
       try {
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
+        return JSON.parse(raw);
       } catch {
         return [];
       }
@@ -518,27 +495,27 @@
 
     function saveLocalVotedId(id) {
       const existing = getLocalVotedIds();
+
       if (existing.includes(id)) return;
-      localStorage.setItem(LOCAL_VOTED_KEY, JSON.stringify([...existing, id]));
+
+      localStorage.setItem(
+        LOCAL_VOTED_KEY,
+        JSON.stringify([...existing, id])
+      );
     }
 
     function escapeHtml(value) {
       return String(value)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/>/g, "&gt;");
     }
 
-    function statusClass(status) {
-      const normalized = String(status || "Open").toLowerCase().replace(/\s+/g, "-");
-      return "status status-" + normalized;
-    }
-
-    function showMessage(message, isError) {
+    function showMessage(message, isError = false) {
       successMessage.textContent = message;
-      successMessage.classList.toggle("error", Boolean(isError));
+
+      successMessage.classList.toggle("error", isError);
+
       successMessage.style.display = "block";
 
       setTimeout(() => {
@@ -550,16 +527,20 @@
       const sortBy = sortSelect.value;
 
       if (sortBy === "newest") {
-        return [...items].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        return [...items].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
       }
 
       if (sortBy === "oldest") {
-        return [...items].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        return [...items].sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        );
       }
 
       return [...items].sort((a, b) => {
-        if (Number(b.votes_count || 0) !== Number(a.votes_count || 0)) {
-          return Number(b.votes_count || 0) - Number(a.votes_count || 0);
+        if (b.votes_count !== a.votes_count) {
+          return b.votes_count - a.votes_count;
         }
 
         return new Date(b.created_at) - new Date(a.created_at);
@@ -567,88 +548,126 @@
     }
 
     async function fetchIdeas() {
+
       emptyState.style.display = "block";
       emptyState.textContent = "Loading feedback...";
 
       const response = await fetch(API_URL);
+
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Could not load feedback.");
+        throw new Error("Could not load feedback.");
       }
 
       ideas = data.ideas || [];
+
       renderIdeas();
     }
 
     function renderIdeas() {
+
       const sortedIdeas = sortItems(ideas);
-      const localVotedIds = getLocalVotedIds();
+
+      const localVotes = getLocalVotedIds();
 
       if (sortedIdeas.length === 0) {
+
         ideaList.innerHTML = "";
+
         emptyState.style.display = "block";
-        emptyState.textContent = "No ideas yet. Be the first to add one.";
+
+        emptyState.textContent =
+          "No ideas yet. Be the first to add one.";
+
         return;
       }
 
       emptyState.style.display = "none";
 
       ideaList.innerHTML = sortedIdeas.map((item) => {
-        const hasVoted = localVotedIds.includes(item.id);
+
+        const hasVoted = localVotes.includes(item.id);
 
         return `
           <article class="idea">
+
             <div class="vote-box">
-              <div class="vote-count">${Number(item.votes_count || 0)}</div>
-              <div class="vote-label">votes</div>
+
+              <div class="vote-count">
+                ${Number(item.votes_count || 0)}
+              </div>
+
+              <div class="vote-label">
+                votes
+              </div>
+
               <button
                 class="vote-button"
                 type="button"
-                data-id="${escapeHtml(item.id)}"
+                data-id="${item.id}"
                 ${hasVoted ? "disabled" : ""}
               >
                 ${hasVoted ? "Voted" : "Upvote"}
               </button>
+
             </div>
 
             <div>
-              <div class="idea-top">
-                <h3>${escapeHtml(item.title)}</h3>
-              </div>
+
+              <h3>${escapeHtml(item.title)}</h3>
+
               <p>${escapeHtml(item.details)}</p>
+
               <div class="idea-meta">
-                <span class="${statusClass(item.status)}">${escapeHtml(item.status || "Open")}</span>
-                <span class="tag">${new Date(item.created_at).toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric"
-                })}</span>
+
+                <span class="status">
+                  ${escapeHtml(item.status || "Open")}
+                </span>
+
+                <span class="tag">
+                  ${new Date(item.created_at).toLocaleDateString()}
+                </span>
+
               </div>
+
             </div>
+
           </article>
         `;
+
       }).join("");
 
-      ideaList.querySelectorAll(".vote-button").forEach((button) => {
+      document.querySelectorAll(".vote-button").forEach((button) => {
+
         button.addEventListener("click", async function () {
-          await upvoteIdea(this.getAttribute("data-id"), this);
+
+          await upvoteIdea(
+            this.getAttribute("data-id"),
+            this
+          );
+
         });
+
       });
     }
 
     async function upvoteIdea(id, button) {
+
       if (!id || button.disabled) return;
 
       button.disabled = true;
       button.textContent = "Voting...";
 
       try {
+
         const response = await fetch(API_URL, {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json"
           },
+
           body: JSON.stringify({
             action: "vote",
             ideaId: id,
@@ -659,30 +678,42 @@
         const data = await response.json();
 
         if (!response.ok) {
-          if (response.status === 409 || data.error === "Already voted") {
-            saveLocalVotedId(id);
-            button.textContent = "Voted";
-            return;
-          }
 
           button.disabled = false;
           button.textContent = "Upvote";
-          showMessage(data.error || "Could not vote. Try again.", true);
+
+          showMessage(
+            data.error || "Could not vote.",
+            true
+          );
+
           return;
         }
 
         saveLocalVotedId(id);
-posthog.capture("feedback_vote_clicked", { ideaId: id });
-button.textContent = "Voted";
-await fetchIdeas();
+
+        posthog.capture("feedback_vote_clicked", {
+          ideaId: id
+        });
+
+        button.textContent = "Voted";
+
+        await fetchIdeas();
+
       } catch {
+
         button.disabled = false;
         button.textContent = "Upvote";
-        showMessage("Could not vote. Check your connection and try again.", true);
+
+        showMessage(
+          "Could not vote.",
+          true
+        );
       }
     }
 
-    form.addEventListener("submit", async function (event) {
+    form.addEventListener("submit", async function(event) {
+
       event.preventDefault();
 
       const title = titleInput.value.trim();
@@ -691,16 +722,22 @@ await fetchIdeas();
 
       if (!title || !details) return;
 
-      const submitButton = form.querySelector("button[type='submit']");
+      const submitButton =
+        form.querySelector("button[type='submit']");
+
       submitButton.disabled = true;
+
       submitButton.textContent = "Submitting...";
 
       try {
+
         const response = await fetch(API_URL, {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json"
           },
+
           body: JSON.stringify({
             action: "create",
             title,
@@ -713,38 +750,66 @@ await fetchIdeas();
         const data = await response.json();
 
         if (!response.ok) {
-  if (response.status === 409 && data.duplicate) {
-    posthog.capture("feedback_duplicate_blocked", {
-      duplicateIdeaId: data.duplicate.id,
-      duplicateTitle: data.duplicate.title
-    });
-  }
 
-  showMessage(data.error || "Could not submit feedback.", true);
-  return;
-}
+          if (response.status === 409 && data.duplicate) {
+
+            posthog.capture(
+              "feedback_duplicate_blocked",
+              {
+                duplicateIdeaId: data.duplicate.id,
+                duplicateTitle: data.duplicate.title
+              }
+            );
+          }
+
+          showMessage(
+            data.error || "Could not submit feedback.",
+            true
+          );
+
+          return;
+        }
 
         form.reset();
-posthog.capture("feedback_submitted");
-showMessage("Feedback submitted.", false);
-await fetchIdeas();
+
+        posthog.capture("feedback_submitted");
+
+        showMessage("Feedback submitted.");
+
+        await fetchIdeas();
+
       } catch {
-        showMessage("Could not submit feedback. Check your connection and try again.", true);
+
+        showMessage(
+          "Could not submit feedback.",
+          true
+        );
+
       } finally {
+
         submitButton.disabled = false;
+
         submitButton.textContent = "Submit feedback";
       }
     });
 
     sortSelect.addEventListener("change", renderIdeas);
 
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
 
     fetchIdeas().catch(() => {
+
       ideaList.innerHTML = "";
+
       emptyState.style.display = "block";
-      emptyState.textContent = "Could not load feedback yet.";
+
+      emptyState.textContent =
+        "Could not load feedback yet.";
+
     });
+
   </script>
+
 </body>
 </html>
