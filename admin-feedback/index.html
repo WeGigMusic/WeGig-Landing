@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WeGig Admin Feedback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      padding: 24px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    input,
+    select,
+    button {
+      background: #111;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .idea-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .idea {
+      border: 1px solid #222;
+      border-radius: 18px;
+      padding: 18px;
+      background: #050812;
+    }
+
+    .idea-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .meta {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tag {
+      border: 1px solid #333;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .hidden {
+      opacity: 0.45;
+    }
+
+    .message {
+      margin-bottom: 18px;
+      color: #7dd3fc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>WeGig Feedback Admin</h1>
+
+  <div class="toolbar">
+    <input
+      id="adminKey"
+      type="password"
+      placeholder="Admin password"
+    />
+
+    <button id="loadButton">
+      Load feedback
+    </button>
+  </div>
+
+  <div id="message" class="message"></div>
+
+  <div id="ideaList" class="idea-list"></div>
+
+  <script>
+    const API_URL = "https://nvmviixlivbxuwfqwujx.supabase.co/functions/v1/feedback";
+
+    const ideaList = document.getElementById("ideaList");
+    const message = document.getElementById("message");
+    const loadButton = document.getElementById("loadButton");
+    const adminKeyInput = document.getElementById("adminKey");
+
+    let ideas = [];
+
+    function showMessage(text) {
+      message.textContent = text;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    async function loadIdeas() {
+      const adminKey = adminKeyInput.value.trim();
+
+      if (!adminKey) {
+        showMessage("Enter admin password.");
+        return;
+      }
+
+      showMessage("Loading...");
+
+      try {
+        const response = await fetch(API_URL + "?admin=true");
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showMessage(data.error || "Could not load feedback.");
+          return;
+        }
+
+        ideas = data.ideas || [];
+
+        renderIdeas();
+
+        localStorage.setItem("wegig.admin.key", adminKey);
+
+        showMessage("Loaded.");
+      } catch {
+        showMessage("Could not load feedback.");
+      }
+    }
+
+    function renderIdeas() {
+      ideaList.innerHTML = ideas.map((idea) => {
+        return `
+          <article class="idea ${idea.is_hidden ? "hidden" : ""}">
+            <div class="idea-top">
+              <div>
+                <h3>${escapeHtml(idea.title)}</h3>
+                <p>${escapeHtml(idea.details)}</p>
+              </div>
+
+              <div class="tag">
+                ${idea.votes_count} votes
+              </div>
+            </div>
+
+            <div class="meta">
+              <div class="tag">
+                ${escapeHtml(idea.status)}
+              </div>
+
+              ${idea.is_pinned ? `
+                <div class="tag">Pinned</div>
+              ` : ""}
+
+              ${idea.is_hidden ? `
+                <div class="tag">Hidden</div>
+              ` : ""}
+            </div>
+
+            <div class="actions">
+              <select data-status="${idea.id}">
+                <option value="Open" ${idea.status === "Open" ? "selected" : ""}>Open</option>
+                <option value="Under review" ${idea.status === "Under review" ? "selected" : ""}>Under review</option>
+                <option value="Planned" ${idea.status === "Planned" ? "selected" : ""}>Planned</option>
+                <option value="Building" ${idea.status === "Building" ? "selected" : ""}>Building</option>
+                <option value="Released" ${idea.status === "Released" ? "selected" : ""}>Released</option>
+                <option value="Future" ${idea.status === "Future" ? "selected" : ""}>Future</option>
+              </select>
+
+              <button onclick="updateIdea('${idea.id}', {
+                status: document.querySelector('[data-status=\"${idea.id}\"]').value
+              })">
+                Save status
+              </button>
+
+              <button onclick="updateIdea('${idea.id}', {
+                isPinned: ${!idea.is_pinned}
+              })">
+                ${idea.is_pinned ? "Unpin" : "Pin"}
+              </button>
+
+              <button onclick="updateIdea('${idea.id}', {
+                isHidden: ${!idea.is_hidden}
+              })">
+                ${idea.is_hidden ? "Restore" : "Hide"}
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function updateIdea(id, updates) {
+      const adminKey = adminKeyInput.value.trim();
+
+      if (!adminKey) {
+        showMessage("Missing admin password.");
+        return;
+      }
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            action: "admin_update",
+            adminKey,
+            ideaId: id,
+            ...updates
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showMessage(data.error || "Could not update idea.");
+          return;
+        }
+
+        await loadIdeas();
+
+        showMessage("Updated.");
+      } catch {
+        showMessage("Could not update idea.");
+      }
+    }
+
+    loadButton.addEventListener("click", loadIdeas);
+
+    const savedKey = localStorage.getItem("wegig.admin.key");
+
+    if (savedKey) {
+      adminKeyInput.value = savedKey;
+    }
+  </script>
+
+</body>
+</html>
