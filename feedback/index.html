@@ -229,6 +229,11 @@
       background: rgba(0,0,0,0.3);
     }
 
+    .idea.pinned {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 1px rgba(30,136,255,0.25);
+    }
+
     .vote-box {
       background: #000;
       border: 1px solid #1f2937;
@@ -269,7 +274,20 @@
       border: 1px solid #1f2937;
       font-size: 12px;
       background: #000;
+      color: var(--text-muted);
     }
+
+    .tag-pinned {
+      color: #7dd3fc;
+      border-color: rgba(125,211,252,0.45);
+    }
+
+    .status-open { color: #d1d5db; }
+    .status-future { color: #c4b5fd; }
+    .status-under-review { color: #fcd34d; }
+    .status-planned { color: #93c5fd; }
+    .status-building { color: #fb923c; }
+    .status-released { color: #86efac; }
 
     .empty-state {
       text-align: center;
@@ -284,11 +302,24 @@
       color: var(--text-muted);
       opacity: 0.75;
     }
+
+    @media (max-width: 640px) {
+      .idea {
+        grid-template-columns: 1fr;
+      }
+
+      .vote-box {
+        max-width: 120px;
+      }
+
+      .small-select {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
 <body>
-
   <nav>
     <a href="/">Home</a>
     <a href="/story/">Story</a>
@@ -297,7 +328,6 @@
 
   <div class="container">
     <main class="page">
-
       <img src="/images/wegig-logo.png?v=2" alt="WeGig" class="logo" />
 
       <section class="card">
@@ -308,12 +338,9 @@
         </p>
 
         <form id="feedbackForm">
-
           <div class="form-grid">
-
             <div class="form-group">
               <label for="title">Feature title</label>
-
               <input
                 id="title"
                 name="title"
@@ -326,7 +353,6 @@
 
             <div class="form-group">
               <label for="details">Why is this useful?</label>
-
               <textarea
                 id="details"
                 name="details"
@@ -347,11 +373,8 @@
             </div>
 
             <div class="submit-row">
-              <button type="submit">
-                Submit feedback
-              </button>
+              <button type="submit">Submit feedback</button>
             </div>
-
           </div>
         </form>
 
@@ -365,7 +388,6 @@
       </section>
 
       <section class="card">
-
         <div class="toolbar">
           <h2>Feature requests</h2>
 
@@ -381,42 +403,31 @@
         <div id="emptyState" class="empty-state" style="display:none;">
           Loading feedback...
         </div>
-
       </section>
 
       <footer>
         &copy; <span id="year"></span> WeGig. All rights reserved.
       </footer>
-
     </main>
   </div>
-
-  <!-- POSTHOG -->
 
   <script>
     !function(t,e){
       var o,n,p,r;
       e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){
-
       function g(t,e){
         var o=e.split(".");
         2==o.length&&(t=t[o[0]],e=o[1]);
-
         t[e]=function(){
           t.push([e].concat(Array.prototype.slice.call(arguments,0)))
         }
       }
-
       (p=t.createElement("script")).type="text/javascript";
       p.crossOrigin="anonymous";
       p.async=!0;
-
       p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js";
-
       (r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);
-
       var u=e;
-
       for(
         void 0!==a?u=e[a]=[]:a="posthog",
         u.people=u.people||[],
@@ -424,21 +435,16 @@
           var e="posthog";
           return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e
         },
-
         u.people.toString=function(){
           return u.toString(1)+".people (stub)"
         },
-
         o="capture identify alias people.set people.set_once reset group group_once unset".split(" "),
         n=0;
         n<o.length;
         n++
       ) g(u,o[n]);
-
       e._i.push([i,s,a])
-
       },e.__SV=1)
-
     }(document,window.posthog||[]);
 
     posthog.init("phc_zvQgDRM5mPmUp7Q23oTPYL7WYwsuSKGDTfNbkngQ2S7K", {
@@ -448,10 +454,7 @@
     posthog.capture("feedback_page_viewed");
   </script>
 
-  <!-- MAIN APP -->
-
   <script>
-
     const API_URL = "https://nvmviixlivbxuwfqwujx.supabase.co/functions/v1/feedback";
 
     const VOTER_KEY = "wegig.feedback.voter.v1";
@@ -487,7 +490,8 @@
       if (!raw) return [];
 
       try {
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
       } catch {
         return [];
       }
@@ -508,14 +512,20 @@
       return String(value)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function getStatusClass(status) {
+      return String(status || "Open")
+        .toLowerCase()
+        .replace(/\s+/g, "-");
     }
 
     function showMessage(message, isError = false) {
       successMessage.textContent = message;
-
       successMessage.classList.toggle("error", isError);
-
       successMessage.style.display = "block";
 
       setTimeout(() => {
@@ -539,8 +549,12 @@
       }
 
       return [...items].sort((a, b) => {
-        if (b.votes_count !== a.votes_count) {
-          return b.votes_count - a.votes_count;
+        if (Boolean(b.is_pinned) !== Boolean(a.is_pinned)) {
+          return Number(Boolean(b.is_pinned)) - Number(Boolean(a.is_pinned));
+        }
+
+        if (Number(b.votes_count || 0) !== Number(a.votes_count || 0)) {
+          return Number(b.votes_count || 0) - Number(a.votes_count || 0);
         }
 
         return new Date(b.created_at) - new Date(a.created_at);
@@ -548,12 +562,10 @@
     }
 
     async function fetchIdeas() {
-
       emptyState.style.display = "block";
       emptyState.textContent = "Loading feedback...";
 
       const response = await fetch(API_URL);
-
       const data = await response.json();
 
       if (!response.ok) {
@@ -561,39 +573,30 @@
       }
 
       ideas = data.ideas || [];
-
       renderIdeas();
     }
 
     function renderIdeas() {
-
       const sortedIdeas = sortItems(ideas);
-
       const localVotes = getLocalVotedIds();
 
       if (sortedIdeas.length === 0) {
-
         ideaList.innerHTML = "";
-
         emptyState.style.display = "block";
-
-        emptyState.textContent =
-          "No ideas yet. Be the first to add one.";
-
+        emptyState.textContent = "No ideas yet. Be the first to add one.";
         return;
       }
 
       emptyState.style.display = "none";
 
       ideaList.innerHTML = sortedIdeas.map((item) => {
-
         const hasVoted = localVotes.includes(item.id);
+        const status = item.status || "Open";
+        const statusClass = getStatusClass(status);
 
         return `
-          <article class="idea">
-
+          <article class="idea ${item.is_pinned ? "pinned" : ""}">
             <div class="vote-box">
-
               <div class="vote-count">
                 ${Number(item.votes_count || 0)}
               </div>
@@ -605,69 +608,62 @@
               <button
                 class="vote-button"
                 type="button"
-                data-id="${item.id}"
+                data-id="${escapeHtml(item.id)}"
                 ${hasVoted ? "disabled" : ""}
               >
                 ${hasVoted ? "Voted" : "Upvote"}
               </button>
-
             </div>
 
             <div>
-
               <h3>${escapeHtml(item.title)}</h3>
 
               <p>${escapeHtml(item.details)}</p>
 
               <div class="idea-meta">
+                ${item.is_pinned ? `
+                  <span class="tag tag-pinned">Pinned</span>
+                ` : ""}
 
-                <span class="status">
-                  ${escapeHtml(item.status || "Open")}
+                <span class="status status-${statusClass}">
+                  ${escapeHtml(status)}
                 </span>
 
                 <span class="tag">
-                  ${new Date(item.created_at).toLocaleDateString()}
+                  ${new Date(item.created_at).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                  })}
                 </span>
-
               </div>
-
             </div>
-
           </article>
         `;
-
       }).join("");
 
       document.querySelectorAll(".vote-button").forEach((button) => {
-
         button.addEventListener("click", async function () {
-
           await upvoteIdea(
             this.getAttribute("data-id"),
             this
           );
-
         });
-
       });
     }
 
     async function upvoteIdea(id, button) {
-
       if (!id || button.disabled) return;
 
       button.disabled = true;
       button.textContent = "Voting...";
 
       try {
-
         const response = await fetch(API_URL, {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json"
           },
-
           body: JSON.stringify({
             action: "vote",
             ideaId: id,
@@ -678,7 +674,6 @@
         const data = await response.json();
 
         if (!response.ok) {
-
           button.disabled = false;
           button.textContent = "Upvote";
 
@@ -699,9 +694,7 @@
         button.textContent = "Voted";
 
         await fetchIdeas();
-
       } catch {
-
         button.disabled = false;
         button.textContent = "Upvote";
 
@@ -713,7 +706,6 @@
     }
 
     form.addEventListener("submit", async function(event) {
-
       event.preventDefault();
 
       const title = titleInput.value.trim();
@@ -722,22 +714,16 @@
 
       if (!title || !details) return;
 
-      const submitButton =
-        form.querySelector("button[type='submit']");
-
+      const submitButton = form.querySelector("button[type='submit']");
       submitButton.disabled = true;
-
       submitButton.textContent = "Submitting...";
 
       try {
-
         const response = await fetch(API_URL, {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json"
           },
-
           body: JSON.stringify({
             action: "create",
             title,
@@ -750,9 +736,7 @@
         const data = await response.json();
 
         if (!response.ok) {
-
           if (response.status === 409 && data.duplicate) {
-
             posthog.capture(
               "feedback_duplicate_blocked",
               {
@@ -777,18 +761,13 @@
         showMessage("Feedback submitted.");
 
         await fetchIdeas();
-
       } catch {
-
         showMessage(
           "Could not submit feedback.",
           true
         );
-
       } finally {
-
         submitButton.disabled = false;
-
         submitButton.textContent = "Submit feedback";
       }
     });
@@ -799,17 +778,10 @@
       new Date().getFullYear();
 
     fetchIdeas().catch(() => {
-
       ideaList.innerHTML = "";
-
       emptyState.style.display = "block";
-
-      emptyState.textContent =
-        "Could not load feedback yet.";
-
+      emptyState.textContent = "Could not load feedback yet.";
     });
-
   </script>
-
 </body>
 </html>
