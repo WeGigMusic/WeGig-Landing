@@ -151,6 +151,10 @@
       resize: vertical;
     }
 
+    .honeypot {
+      display: none;
+    }
+
     .submit-row {
       margin-top: 4px;
       display: flex;
@@ -201,6 +205,10 @@
       font-size: 14px;
       color: #7dd3fc;
       font-weight: 600;
+    }
+
+    .success.error {
+      color: #fca5a5;
     }
 
     .toolbar {
@@ -404,14 +412,15 @@
               ></textarea>
             </div>
 
-            <div class="form-group">
-              <label for="status">Roadmap status</label>
-              <select id="status" name="status">
-                <option value="Open">Open</option>
-                <option value="Future">Future</option>
-                <option value="Under review">Under review</option>
-                <option value="Planned">Planned</option>
-              </select>
+            <div class="honeypot" aria-hidden="true">
+              <label for="website">Website</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                autocomplete="off"
+                tabindex="-1"
+              />
             </div>
 
             <div class="submit-row">
@@ -421,7 +430,7 @@
         </form>
 
         <p class="helper">
-          Suggestions are saved in your browser for now. Later this can be upgraded to shared submissions.
+          Suggestions are shared with the WeGig roadmap and help decide what gets built next.
         </p>
 
         <div id="successMessage" class="success" style="display:none;">
@@ -438,13 +447,12 @@
               <option value="newest">Sort: Newest</option>
               <option value="oldest">Sort: Oldest</option>
             </select>
-            <button id="resetButton" type="button">Reset sample data</button>
           </div>
         </div>
 
         <div id="ideaList" class="idea-list"></div>
         <div id="emptyState" class="empty-state" style="display:none;">
-          No ideas yet. Be the first to add one.
+          Loading feedback...
         </div>
       </section>
 
@@ -453,89 +461,34 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "wegig.feedback.items.v1";
-    const VOTED_KEY = "wegig.feedback.voted.v1";
-
-    const seedIdeas = [
-      {
-        id: "seed-1",
-        title: "Future AI OCR for old tickets",
-        details: "Use AI and OCR to scan old ticket stubs and automatically turn them into logged gigs.",
-        status: "Future",
-        votes: 0,
-        createdAt: "2026-04-02T09:00:00.000Z"
-      },
-      {
-        id: "seed-2",
-        title: "Add set lists",
-        details: "Let users attach or view set lists for gigs they attended.",
-        status: "Open",
-        votes: 0,
-        createdAt: "2026-04-02T09:01:00.000Z"
-      },
-      {
-        id: "seed-3",
-        title: "Add previous gigs",
-        details: "Make it easier to backfill older gigs from years ago into a personal history.",
-        status: "Open",
-        votes: 0,
-        createdAt: "2026-04-02T09:02:00.000Z"
-      },
-      {
-        id: "seed-4",
-        title: "Add to calendar option",
-        details: "Allow users to add upcoming gigs directly to their calendar.",
-        status: "Planned",
-        votes: 0,
-        createdAt: "2026-04-02T09:03:00.000Z"
-      },
-      {
-        id: "seed-5",
-        title: "Share gig with friend to suggest attending",
-        details: "Let users share a gig with a friend as a prompt to go together.",
-        status: "Future",
-        votes: 0,
-        createdAt: "2026-04-02T09:04:00.000Z"
-      },
-      {
-        id: "seed-6",
-        title: "Gig photo of the week",
-        details: "Highlight one user-submitted gig photo each week to create community engagement.",
-        status: "Future",
-        votes: 0,
-        createdAt: "2026-04-02T09:05:00.000Z"
-      }
-    ];
+    const API_URL = "https://nvmviixlivbxuwvfqwujx.supabase.co/functions/v1/feedback";
+    const VOTER_KEY = "wegig.feedback.voter.v1";
+    const LOCAL_VOTED_KEY = "wegig.feedback.localVotes.v1";
 
     const form = document.getElementById("feedbackForm");
     const titleInput = document.getElementById("title");
     const detailsInput = document.getElementById("details");
-    const statusInput = document.getElementById("status");
+    const websiteInput = document.getElementById("website");
     const ideaList = document.getElementById("ideaList");
     const emptyState = document.getElementById("emptyState");
     const successMessage = document.getElementById("successMessage");
     const sortSelect = document.getElementById("sortSelect");
-    const resetButton = document.getElementById("resetButton");
 
-    function getItems() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [...seedIdeas];
+    let ideas = [];
 
-      try {
-        const parsed = JSON.parse(raw);
-        if (!Array.isArray(parsed)) return [...seedIdeas];
-        return parsed;
-      } catch {
-        return [...seedIdeas];
+    function getVoterId() {
+      let id = localStorage.getItem(VOTER_KEY);
+
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem(VOTER_KEY, id);
       }
+
+      return id;
     }
 
-    function saveItems(items) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }
-
-    function getVotedIds() {
-      const raw = localStorage.getItem(VOTED_KEY);
+    function getLocalVotedIds() {
+      const raw = localStorage.getItem(LOCAL_VOTED_KEY);
       if (!raw) return [];
 
       try {
@@ -546,8 +499,10 @@
       }
     }
 
-    function saveVotedIds(ids) {
-      localStorage.setItem(VOTED_KEY, JSON.stringify(ids));
+    function saveLocalVotedId(id) {
+      const existing = getLocalVotedIds();
+      if (existing.includes(id)) return;
+      localStorage.setItem(LOCAL_VOTED_KEY, JSON.stringify([...existing, id]));
     }
 
     function escapeHtml(value) {
@@ -560,46 +515,75 @@
     }
 
     function statusClass(status) {
-      const normalized = String(status).toLowerCase().replace(/\s+/g, "-");
+      const normalized = String(status || "Open").toLowerCase().replace(/\s+/g, "-");
       return "status status-" + normalized;
+    }
+
+    function showMessage(message, isError) {
+      successMessage.textContent = message;
+      successMessage.classList.toggle("error", Boolean(isError));
+      successMessage.style.display = "block";
+
+      setTimeout(() => {
+        successMessage.style.display = "none";
+      }, 2400);
     }
 
     function sortItems(items) {
       const sortBy = sortSelect.value;
 
       if (sortBy === "newest") {
-        return [...items].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        return [...items].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       }
 
       if (sortBy === "oldest") {
-        return [...items].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        return [...items].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
       }
 
       return [...items].sort((a, b) => {
-        if (b.votes !== a.votes) return b.votes - a.votes;
-        return new Date(b.createdAt) - new Date(a.createdAt);
+        if (Number(b.votes_count || 0) !== Number(a.votes_count || 0)) {
+          return Number(b.votes_count || 0) - Number(a.votes_count || 0);
+        }
+
+        return new Date(b.created_at) - new Date(a.created_at);
       });
     }
 
-    function renderIdeas() {
-      const items = sortItems(getItems());
-      const votedIds = getVotedIds();
+    async function fetchIdeas() {
+      emptyState.style.display = "block";
+      emptyState.textContent = "Loading feedback...";
 
-      if (items.length === 0) {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Could not load feedback.");
+      }
+
+      ideas = data.ideas || [];
+      renderIdeas();
+    }
+
+    function renderIdeas() {
+      const sortedIdeas = sortItems(ideas);
+      const localVotedIds = getLocalVotedIds();
+
+      if (sortedIdeas.length === 0) {
         ideaList.innerHTML = "";
         emptyState.style.display = "block";
+        emptyState.textContent = "No ideas yet. Be the first to add one.";
         return;
       }
 
       emptyState.style.display = "none";
 
-      ideaList.innerHTML = items.map((item) => {
-        const hasVoted = votedIds.includes(item.id);
+      ideaList.innerHTML = sortedIdeas.map((item) => {
+        const hasVoted = localVotedIds.includes(item.id);
 
         return `
           <article class="idea">
             <div class="vote-box">
-              <div class="vote-count">${item.votes}</div>
+              <div class="vote-count">${Number(item.votes_count || 0)}</div>
               <div class="vote-label">votes</div>
               <button
                 class="vote-button"
@@ -617,8 +601,8 @@
               </div>
               <p>${escapeHtml(item.details)}</p>
               <div class="idea-meta">
-                <span class="${statusClass(item.status)}">${escapeHtml(item.status)}</span>
-                <span class="tag">${new Date(item.createdAt).toLocaleDateString("en-GB", {
+                <span class="${statusClass(item.status)}">${escapeHtml(item.status || "Open")}</span>
+                <span class="tag">${new Date(item.created_at).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "short",
                   year: "numeric"
@@ -629,76 +613,112 @@
         `;
       }).join("");
 
-      const buttons = ideaList.querySelectorAll(".vote-button");
-      buttons.forEach((button) => {
-        button.addEventListener("click", function () {
-          const id = this.getAttribute("data-id");
-          upvoteIdea(id);
+      ideaList.querySelectorAll(".vote-button").forEach((button) => {
+        button.addEventListener("click", async function () {
+          await upvoteIdea(this.getAttribute("data-id"), this);
         });
       });
     }
 
-    function upvoteIdea(id) {
-      if (!id) return;
+    async function upvoteIdea(id, button) {
+      if (!id || button.disabled) return;
 
-      const votedIds = getVotedIds();
-      if (votedIds.includes(id)) return;
+      button.disabled = true;
+      button.textContent = "Voting...";
 
-      const items = getItems().map((item) => {
-        if (item.id === id) {
-          return { ...item, votes: Number(item.votes || 0) + 1 };
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            action: "vote",
+            ideaId: id,
+            voterId: getVoterId()
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          if (response.status === 409 || data.error === "Already voted") {
+            saveLocalVotedId(id);
+            button.textContent = "Voted";
+            return;
+          }
+
+          button.disabled = false;
+          button.textContent = "Upvote";
+          showMessage(data.error || "Could not vote. Try again.", true);
+          return;
         }
-        return item;
-      });
 
-      saveItems(items);
-      saveVotedIds([...votedIds, id]);
-      renderIdeas();
+        saveLocalVotedId(id);
+        button.textContent = "Voted";
+        await fetchIdeas();
+      } catch {
+        button.disabled = false;
+        button.textContent = "Upvote";
+        showMessage("Could not vote. Check your connection and try again.", true);
+      }
     }
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
       event.preventDefault();
 
       const title = titleInput.value.trim();
       const details = detailsInput.value.trim();
-      const status = statusInput.value;
+      const website = websiteInput.value.trim();
 
       if (!title || !details) return;
 
-      const items = getItems();
-      const newItem = {
-        id: "idea-" + Date.now(),
-        title,
-        details,
-        status,
-        votes: 0,
-        createdAt: new Date().toISOString()
-      };
+      const submitButton = form.querySelector("button[type='submit']");
+      submitButton.disabled = true;
+      submitButton.textContent = "Submitting...";
 
-      items.unshift(newItem);
-      saveItems(items);
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            action: "create",
+            title,
+            details,
+            website,
+            voterId: getVoterId()
+          })
+        });
 
-      form.reset();
-      statusInput.value = "Open";
-      successMessage.style.display = "block";
+        const data = await response.json();
 
-      setTimeout(() => {
-        successMessage.style.display = "none";
-      }, 1800);
+        if (!response.ok) {
+          showMessage(data.error || "Could not submit feedback.", true);
+          return;
+        }
 
-      renderIdeas();
+        form.reset();
+        showMessage("Feedback submitted.", false);
+        await fetchIdeas();
+      } catch {
+        showMessage("Could not submit feedback. Check your connection and try again.", true);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit feedback";
+      }
     });
 
     sortSelect.addEventListener("change", renderIdeas);
 
-    resetButton.addEventListener("click", function () {
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(VOTED_KEY);
-      renderIdeas();
-    });
-
     document.getElementById("year").textContent = new Date().getFullYear();
-    renderIdeas();
+
+    fetchIdeas().catch(() => {
+      ideaList.innerHTML = "";
+      emptyState.style.display = "block";
+      emptyState.textContent = "Could not load feedback yet.";
+    });
   </script>
 </body>
 </html>
