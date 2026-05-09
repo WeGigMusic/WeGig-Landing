@@ -42,7 +42,6 @@
       color: var(--text-muted);
       text-decoration: none;
       font-size: 14px;
-      transition: 0.15s ease;
     }
 
     nav a:hover {
@@ -58,7 +57,7 @@
 
     .page {
       width: 100%;
-      max-width: 760px;
+      max-width: 860px;
     }
 
     .logo {
@@ -199,6 +198,12 @@
       color: #fca5a5;
     }
 
+    .section-title {
+      margin: 22px 0 12px;
+      color: var(--text-main);
+      font-size: 20px;
+    }
+
     .toolbar {
       display: flex;
       justify-content: space-between;
@@ -289,6 +294,63 @@
     .status-building { color: #fb923c; }
     .status-released { color: #86efac; }
 
+    .comments {
+      margin-top: 16px;
+      border-top: 1px solid #1f2937;
+      padding-top: 14px;
+    }
+
+    .comments-title {
+      color: var(--text-main);
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .comment-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .comment {
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.35);
+    }
+
+    .comment-name {
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .comment-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .comment-form {
+      display: grid;
+      grid-template-columns: 150px 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .comment-form input {
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .comment-form button {
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
     .empty-state {
       text-align: center;
       color: var(--text-muted);
@@ -303,7 +365,7 @@
       opacity: 0.75;
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 720px) {
       .idea {
         grid-template-columns: 1fr;
       }
@@ -314,6 +376,10 @@
 
       .small-select {
         width: 100%;
+      }
+
+      .comment-form {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -334,7 +400,7 @@
         <h1>Help shape WeGig</h1>
 
         <p class="intro">
-          Share ideas, vote on what matters, and help decide what gets built next.
+          Share ideas, vote on what matters, discuss features, and help decide what gets built next.
         </p>
 
         <form id="feedbackForm">
@@ -398,7 +464,7 @@
           </select>
         </div>
 
-        <div id="ideaList" class="idea-list"></div>
+        <div id="roadmapContent"></div>
 
         <div id="emptyState" class="empty-state" style="display:none;">
           Loading feedback...
@@ -465,13 +531,18 @@
     const detailsInput = document.getElementById("details");
     const websiteInput = document.getElementById("website");
 
-    const ideaList = document.getElementById("ideaList");
+    const roadmapContent = document.getElementById("roadmapContent");
     const emptyState = document.getElementById("emptyState");
-
     const successMessage = document.getElementById("successMessage");
     const sortSelect = document.getElementById("sortSelect");
 
     let ideas = [];
+
+    function safeCapture(eventName, properties = {}) {
+      if (window.posthog && typeof window.posthog.capture === "function") {
+        window.posthog.capture(eventName, properties);
+      }
+    }
 
     function getVoterId() {
       let id = localStorage.getItem(VOTER_KEY);
@@ -509,7 +580,7 @@
     }
 
     function escapeHtml(value) {
-      return String(value)
+      return String(value || "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -530,7 +601,7 @@
 
       setTimeout(() => {
         successMessage.style.display = "none";
-      }, 2400);
+      }, 2600);
     }
 
     function sortItems(items) {
@@ -561,6 +632,10 @@
       });
     }
 
+    function isRoadmapStatus(status) {
+      return ["Planned", "Building", "Released"].includes(status);
+    }
+
     async function fetchIdeas() {
       emptyState.style.display = "block";
       emptyState.textContent = "Loading feedback...";
@@ -576,12 +651,132 @@
       renderIdeas();
     }
 
-    function renderIdeas() {
-      const sortedIdeas = sortItems(ideas);
-      const localVotes = getLocalVotedIds();
+    function renderSection(title, sectionIdeas) {
+      if (sectionIdeas.length === 0) return "";
 
-      if (sortedIdeas.length === 0) {
-        ideaList.innerHTML = "";
+      return `
+        <h3 class="section-title">${escapeHtml(title)}</h3>
+        <div class="idea-list">
+          ${sectionIdeas.map(renderIdea).join("")}
+        </div>
+      `;
+    }
+
+    function renderIdea(item) {
+      const localVotes = getLocalVotedIds();
+      const hasVoted = localVotes.includes(item.id);
+      const status = item.status || "Open";
+      const statusClass = getStatusClass(status);
+      const comments = Array.isArray(item.comments) ? item.comments : [];
+
+      return `
+        <article class="idea ${item.is_pinned ? "pinned" : ""}">
+          <div class="vote-box">
+            <div class="vote-count">
+              ${Number(item.votes_count || 0)}
+            </div>
+
+            <div class="vote-label">
+              votes
+            </div>
+
+            <button
+              class="vote-button"
+              type="button"
+              data-id="${escapeHtml(item.id)}"
+              ${hasVoted ? "disabled" : ""}
+            >
+              ${hasVoted ? "Voted" : "Upvote"}
+            </button>
+          </div>
+
+          <div>
+            <h3>${escapeHtml(item.title)}</h3>
+
+            <p>${escapeHtml(item.details)}</p>
+
+            <div class="idea-meta">
+              ${item.is_pinned ? `
+                <span class="tag tag-pinned">Pinned</span>
+              ` : ""}
+
+              <span class="status status-${statusClass}">
+                ${escapeHtml(status)}
+              </span>
+
+              <span class="tag">
+                ${Number(item.comment_count || comments.length)} comments
+              </span>
+
+              <span class="tag">
+                ${new Date(item.created_at).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric"
+                })}
+              </span>
+            </div>
+
+            <div class="comments">
+              <div class="comments-title">
+                Discussion
+              </div>
+
+              <div class="comment-list">
+                ${
+                  comments.length > 0
+                    ? comments.map(renderComment).join("")
+                    : `<p class="comment-text">No comments yet.</p>`
+                }
+              </div>
+
+              <form class="comment-form" data-idea-id="${escapeHtml(item.id)}">
+                <input
+                  type="text"
+                  name="commenterName"
+                  maxlength="60"
+                  placeholder="Name optional"
+                />
+
+                <input
+                  type="text"
+                  name="comment"
+                  maxlength="500"
+                  placeholder="Add a comment"
+                  required
+                />
+
+                <button type="submit">
+                  Comment
+                </button>
+              </form>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderComment(comment) {
+      const name = comment.commenter_name || "Anonymous";
+
+      return `
+        <div class="comment">
+          <div class="comment-name">
+            ${escapeHtml(name)}
+          </div>
+
+          <div class="comment-text">
+            ${escapeHtml(comment.comment)}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderIdeas() {
+      const sorted = sortItems(ideas);
+
+      if (sorted.length === 0) {
+        roadmapContent.innerHTML = "";
         emptyState.style.display = "block";
         emptyState.textContent = "No ideas yet. Be the first to add one.";
         return;
@@ -589,65 +784,30 @@
 
       emptyState.style.display = "none";
 
-      ideaList.innerHTML = sortedIdeas.map((item) => {
-        const hasVoted = localVotes.includes(item.id);
-        const status = item.status || "Open";
-        const statusClass = getStatusClass(status);
+      const pinnedIdeas = sorted.filter((idea) => idea.is_pinned);
+      const roadmapIdeas = sorted.filter(
+        (idea) => !idea.is_pinned && isRoadmapStatus(idea.status)
+      );
+      const allIdeas = sorted.filter(
+        (idea) => !idea.is_pinned && !isRoadmapStatus(idea.status)
+      );
 
-        return `
-          <article class="idea ${item.is_pinned ? "pinned" : ""}">
-            <div class="vote-box">
-              <div class="vote-count">
-                ${Number(item.votes_count || 0)}
-              </div>
-
-              <div class="vote-label">
-                votes
-              </div>
-
-              <button
-                class="vote-button"
-                type="button"
-                data-id="${escapeHtml(item.id)}"
-                ${hasVoted ? "disabled" : ""}
-              >
-                ${hasVoted ? "Voted" : "Upvote"}
-              </button>
-            </div>
-
-            <div>
-              <h3>${escapeHtml(item.title)}</h3>
-
-              <p>${escapeHtml(item.details)}</p>
-
-              <div class="idea-meta">
-                ${item.is_pinned ? `
-                  <span class="tag tag-pinned">Pinned</span>
-                ` : ""}
-
-                <span class="status status-${statusClass}">
-                  ${escapeHtml(status)}
-                </span>
-
-                <span class="tag">
-                  ${new Date(item.created_at).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                  })}
-                </span>
-              </div>
-            </div>
-          </article>
-        `;
-      }).join("");
+      roadmapContent.innerHTML = `
+        ${renderSection("Pinned ideas", pinnedIdeas)}
+        ${renderSection("Planned / Building / Released", roadmapIdeas)}
+        ${renderSection("All ideas", allIdeas)}
+      `;
 
       document.querySelectorAll(".vote-button").forEach((button) => {
         button.addEventListener("click", async function () {
-          await upvoteIdea(
-            this.getAttribute("data-id"),
-            this
-          );
+          await upvoteIdea(this.getAttribute("data-id"), this);
+        });
+      });
+
+      document.querySelectorAll(".comment-form").forEach((commentForm) => {
+        commentForm.addEventListener("submit", async function (event) {
+          event.preventDefault();
+          await submitComment(this);
         });
       });
     }
@@ -676,20 +836,12 @@
         if (!response.ok) {
           button.disabled = false;
           button.textContent = "Upvote";
-
-          showMessage(
-            data.error || "Could not vote.",
-            true
-          );
-
+          showMessage(data.error || "Could not vote.", true);
           return;
         }
 
         saveLocalVotedId(id);
-
-        posthog.capture("feedback_vote_clicked", {
-          ideaId: id
-        });
+        safeCapture("feedback_vote_clicked", { ideaId: id });
 
         button.textContent = "Voted";
 
@@ -697,11 +849,58 @@
       } catch {
         button.disabled = false;
         button.textContent = "Upvote";
+        showMessage("Could not vote.", true);
+      }
+    }
 
-        showMessage(
-          "Could not vote.",
-          true
-        );
+    async function submitComment(commentForm) {
+      const ideaId = commentForm.getAttribute("data-idea-id");
+      const nameInput = commentForm.querySelector("[name='commenterName']");
+      const commentInput = commentForm.querySelector("[name='comment']");
+      const button = commentForm.querySelector("button[type='submit']");
+
+      const commenterName = nameInput.value.trim();
+      const comment = commentInput.value.trim();
+
+      if (!ideaId || !comment) return;
+
+      button.disabled = true;
+      button.textContent = "Posting...";
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            action: "create_comment",
+            ideaId,
+            commenterName,
+            comment,
+            voterId: getVoterId()
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showMessage(data.error || "Could not post comment.", true);
+          return;
+        }
+
+        safeCapture("feedback_comment_submitted", { ideaId });
+
+        commentInput.value = "";
+
+        showMessage("Comment posted.");
+
+        await fetchIdeas();
+      } catch {
+        showMessage("Could not post comment.", true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "Comment";
       }
     }
 
@@ -737,13 +936,10 @@
 
         if (!response.ok) {
           if (response.status === 409 && data.duplicate) {
-            posthog.capture(
-              "feedback_duplicate_blocked",
-              {
-                duplicateIdeaId: data.duplicate.id,
-                duplicateTitle: data.duplicate.title
-              }
-            );
+            safeCapture("feedback_duplicate_blocked", {
+              duplicateIdeaId: data.duplicate.id,
+              duplicateTitle: data.duplicate.title
+            });
           }
 
           showMessage(
@@ -756,7 +952,7 @@
 
         form.reset();
 
-        posthog.capture("feedback_submitted");
+        safeCapture("feedback_submitted");
 
         showMessage("Feedback submitted.");
 
@@ -778,7 +974,7 @@
       new Date().getFullYear();
 
     fetchIdeas().catch(() => {
-      ideaList.innerHTML = "";
+      roadmapContent.innerHTML = "";
       emptyState.style.display = "block";
       emptyState.textContent = "Could not load feedback yet.";
     });
