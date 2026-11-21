@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -170,9 +171,30 @@
 
     footer {
       margin-top: 20px;
+      text-align: center;
       font-size: 11px;
       color: var(--text-muted);
       opacity: 0.75;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible {
+      color: var(--text-main);
+      text-decoration: underline;
     }
 
     @media (max-width: 480px) {
@@ -217,7 +239,6 @@
   <nav>
     <a href="/story/">Story</a>
     <a href="/feedback/">Feedback</a>
-    <a href="/privacy/">Privacy</a>
   </nav>
 
   <div class="container">
@@ -257,7 +278,14 @@
         </iframe>
       </section>
 
-      <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
+      <footer>
+        &copy; <span id="year"></span> WeGig. All rights reserved.
+        <div class="footer-links">
+          <a href="/privacy/">Privacy Policy</a>
+          <span aria-hidden="true">|</span>
+          <a href="/terms/">Terms &amp; Conditions</a>
+        </div>
+      </footer>
     </main>
   </div>
 
