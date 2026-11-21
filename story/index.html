@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -149,6 +150,26 @@
       opacity: 0.75;
     }
 
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible {
+      color: var(--text-main);
+      text-decoration: underline;
+    }
+
     @media (max-width: 480px) {
       nav {
         gap: 16px;
@@ -177,7 +198,6 @@
   <nav>
     <a href="/">Home</a>
     <a href="/feedback/">Feedback</a>
-    <a href="/privacy/">Privacy</a>
   </nav>
 
   <div class="container">
@@ -185,41 +205,47 @@
       <img src="/images/wegig-logo.png?v=2" alt="WeGig" class="logo" />
 
       <section class="card">
-      <h1>The story behind WeGig</h1>
+        <h1>The story behind WeGig</h1>
 
-        <!-- ✅ UPDATED IMAGE -->
-       <img src="/images/logo-toilet.png?v=1" alt="WeGig logo" class="logo_toilet" />
-        
-<p>
-  WeGig started from a simple idea. Live music is a huge part of our lives but the memories don’t really live anywhere.
-</p>
+        <img src="/images/logo-toilet.png?v=1" alt="WeGig logo" class="logo_toilet" />
 
-<p>
-  We track all sorts of things in our lives, but gigs end up scattered across tickets, socials and half-forgotten nights. Our gigs deserve more than that, because they are where we discover artists, create memories and share experiences. Some of us go to so many that we completely forget that we even saw an artist, because there’s no natural home to track - we're changing that.
-</p>
+        <p>
+          WeGig started from a simple idea. Live music is a huge part of our lives but the memories don’t really live anywhere.
+        </p>
 
-<h2>What WeGig is</h2>
+        <p>
+          We track all sorts of things in our lives, but gigs end up scattered across tickets, socials and half-forgotten nights. Our gigs deserve more than that, because they are where we discover artists, create memories and share experiences. Some of us go to so many that we completely forget that we even saw an artist, because there’s no natural home to track - we're changing that.
+        </p>
 
-<p>
-  WeGig is a place to track the gigs you’ve been to and relive them.   Over time it’ll become your personal live music history and a way to discover what’s next.
-</p>
+        <h2>What WeGig is</h2>
 
-<h2>Built with you</h2>
+        <p>
+          WeGig is a place to track the gigs you’ve been to and relive them. Over time it’ll become your personal live music history and a way to discover what’s next.
+        </p>
 
-<p>
-  WeGig is being built step by step, shaped by real feedback. If there’s something you want, suggest it. If something doesn’t work, shout.
-</p>
+        <h2>Built with you</h2>
 
-<p>
-  This is just the start.
-</p>
+        <p>
+          WeGig is being built step by step, shaped by real feedback. If there’s something you want, suggest it. If something doesn’t work, shout.
+        </p>
+
+        <p>
+          This is just the start.
+        </p>
 
         <div class="cta">
           <a href="/feedback/">Share feedback</a>
         </div>
       </section>
 
-      <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
+      <footer>
+        &copy; <span id="year"></span> WeGig. All rights reserved.
+        <div class="footer-links">
+          <a href="/privacy/">Privacy Policy</a>
+          <span aria-hidden="true">|</span>
+          <a href="/terms/">Terms &amp; Conditions</a>
+        </div>
+      </footer>
     </main>
   </div>
 
