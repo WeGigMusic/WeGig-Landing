@@ -365,6 +365,26 @@
       opacity: 0.75;
     }
 
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible {
+      color: var(--text-main);
+      text-decoration: underline;
+    }
+
     @media (max-width: 720px) {
       .idea {
         grid-template-columns: 1fr;
@@ -389,7 +409,6 @@
   <nav>
     <a href="/">Home</a>
     <a href="/story/">Story</a>
-    <a href="/privacy/">Privacy</a>
   </nav>
 
   <div class="container">
@@ -473,6 +492,11 @@
 
       <footer>
         &copy; <span id="year"></span> WeGig. All rights reserved.
+        <div class="footer-links">
+          <a href="/privacy/">Privacy Policy</a>
+          <span aria-hidden="true">|</span>
+          <a href="/terms/">Terms &amp; Conditions</a>
+        </div>
       </footer>
     </main>
   </div>
