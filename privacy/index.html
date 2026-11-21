@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,6 +107,10 @@
       margin-top: 8px;
     }
 
+    .card a {
+      color: var(--accent-blue);
+    }
+
     .effective-date {
       text-align: center;
       margin-bottom: 18px;
@@ -119,6 +124,26 @@
       font-size: 11px;
       color: var(--text-muted);
       opacity: 0.75;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible {
+      color: var(--text-main);
+      text-decoration: underline;
     }
 
     @media (max-width: 480px) {
@@ -158,17 +183,17 @@
 
       <section class="card">
         <h1>Privacy Policy</h1>
-        <p class="effective-date"><strong>Last updated:</strong> 18 November 2026</p>
+        <p class="effective-date"><strong>Last updated:</strong> 21 November 2026</p>
 
         <p>
-          WeGig Limited operates the WeGig app and website. This policy explains what information we collect, how we use it and how you can manage it.
+          WeGig Limited operates the WeGig app and website and is responsible for the personal information it processes. This policy explains what information we collect, how we use it and how you can manage it.
         </p>
 
         <h2>Information we collect</h2>
 
         <ul>
-          <li>Sign-in information and the gig details you save. Your chosen profile name and photo are stored on your device.</li>
-          <li>Location, if you grant permission, to suggest nearby gigs and venues. You can change this in your device settings.</li>
+          <li>Sign-in information, account identifiers and the gig details you save. Your chosen profile name and photo are stored on your device.</li>
+          <li>Location, if you grant permission, to suggest nearby gigs and venues. You can change this permission in your device settings.</li>
           <li>App activity, such as screens and setlists viewed, and device information. We use PostHog for app analytics and link activity to an account identifier.</li>
           <li>Information you send us, such as feedback and support messages.</li>
           <li>If you make an optional contribution, Apple or Google processes the payment. We receive transaction details to verify the contribution, manage supporter status and handle refunds.</li>
@@ -177,26 +202,103 @@
         <h2>How we use information</h2>
 
         <ul>
-          <li>To operate and improve the app and website</li>
-          <li>To personalise your experience, including location-based features</li>
-          <li>To review feedback and prioritise new features</li>
-          <li>To communicate with you if you contact us</li>
+          <li>To operate, maintain and improve the app and website.</li>
+          <li>To provide your account, saved gig history and other requested features.</li>
+          <li>To personalise your experience, including location-based recommendations.</li>
+          <li>To understand app performance, review feedback and prioritise new features.</li>
+          <li>To verify contributions, manage refunds and prevent fraud.</li>
+          <li>To protect the security and integrity of the service.</li>
+          <li>To communicate with you if you contact us.</li>
+          <li>To comply with applicable legal obligations.</li>
         </ul>
 
-        <h2>Sharing</h2>
+        <h2>Legal bases for processing</h2>
+
+        <p>
+          Where UK GDPR or equivalent data protection legislation applies, we process personal information on an appropriate legal basis, depending on the purpose of the processing.
+        </p>
+
+        <ul>
+          <li><strong>Contract:</strong> Where processing is necessary to provide your account and the services you request.</li>
+          <li><strong>Legitimate interests:</strong> Where appropriate, to maintain security, prevent fraud, respond to enquiries and improve the service, taking account of your privacy rights.</li>
+          <li><strong>Consent:</strong> Where consent is required, including for relevant optional features and analytics. You may withdraw consent where processing relies on it.</li>
+          <li><strong>Legal obligations:</strong> Where processing is necessary to comply with applicable accounting, tax or other legal requirements.</li>
+        </ul>
+
+        <h2>Children and young people</h2>
+
+        <p>
+          You must be at least 13 years old to create a WeGig account. Users under 18 must have permission from a parent or legal guardian where required by applicable law.
+        </p>
+
+        <p>
+          We recognise that younger users require additional privacy protections. We do not intend to collect personal information from children under 13 through WeGig accounts.
+        </p>
+
+        <p>
+          If you are a parent or legal guardian and believe a child has provided personal information to WeGig without the necessary permission, please contact us so we can investigate and take appropriate action.
+        </p>
+
+        <h2>Location information</h2>
+
+        <p>
+          Location-based features are optional. If you grant location permission, WeGig uses location information to help suggest relevant gigs and venues.
+        </p>
+
+        <p>
+          You can withdraw location permission through your device settings at any time. This may affect the availability or accuracy of nearby recommendations.
+        </p>
+
+        <h2>Analytics</h2>
+
+        <p>
+          We use PostHog to understand how WeGig is used and identify opportunities to improve the app. This may include information about screens viewed, features used and device characteristics.
+        </p>
+
+        <p>
+          Analytics activity may be associated with your WeGig account identifier. You may contact us to exercise your applicable data protection rights in relation to this information.
+        </p>
+
+        <h2>Sharing information</h2>
 
         <p>
           WeGig does not sell your personal data.
         </p>
 
         <p>
-          We may use trusted third-party services, such as hosting, analytics, or infrastructure providers, to operate the product.
+          We use third-party service providers to support the operation of WeGig. These include providers of authentication, database storage, hosting, analytics and payment processing services.
         </p>
 
-        <h2>Data storage</h2>
+        <p>
+          Apple and Google process app store payments under their own applicable privacy policies and terms.
+        </p>
 
         <p>
-          Data is stored securely and only retained as long as necessary to provide the service and improve the product.
+          We may also disclose information where required by law or where necessary to protect the rights, security or integrity of our service and its users.
+        </p>
+
+        <h2>International data transfers</h2>
+
+        <p>
+          Some third-party service providers may process or store information outside your country of residence.
+        </p>
+
+        <p>
+          Where applicable data protection legislation requires safeguards for international transfers, appropriate legally recognised transfer mechanisms must be used.
+        </p>
+
+        <h2>Data storage and retention</h2>
+
+        <p>
+          We retain personal information for as long as reasonably necessary to provide the service, manage your account and fulfil the purposes described in this policy.
+        </p>
+
+        <p>
+          Retention periods depend on the type of information, the purpose for which it is processed and applicable legal, accounting and security requirements.
+        </p>
+
+        <p>
+          We take reasonable technical and organisational measures to protect personal information. However, no electronic storage or transmission system can be guaranteed to be completely secure.
         </p>
 
         <h2 id="delete-account">Delete your WeGig account</h2>
@@ -226,26 +328,61 @@
           refund contributions.
         </p>
 
-        <h2>Your choices</h2>
+        <h2>Your rights and choices</h2>
 
         <p>
-          You can choose not to provide personal information. You may also request access to or deletion of your data where applicable.
+          Depending on the applicable data protection legislation, you may have the right to:
+        </p>
+
+        <ul>
+          <li>Access the personal information we hold about you.</li>
+          <li>Request correction of inaccurate information.</li>
+          <li>Request deletion of your personal information.</li>
+          <li>Request restriction of processing.</li>
+          <li>Object to certain types of processing.</li>
+          <li>Request a portable copy of eligible personal information.</li>
+          <li>Withdraw consent where processing relies on consent.</li>
+          <li>Make a complaint to a relevant data protection authority.</li>
+        </ul>
+
+        <p>
+          To exercise your rights, please contact us using the details below. We may need to verify your identity before completing your request.
+        </p>
+
+        <p>
+          In the UK, you can contact the Information Commissioner's Office (ICO) at
+          <a href="https://ico.org.uk/">ico.org.uk</a>.
+        </p>
+
+        <h2>Company information</h2>
+
+        <p>
+          WeGig Limited is a company registered in England and Wales under company number 16886421. Further company details are available in our
+          <a href="/terms/">Terms and Conditions</a>.
         </p>
 
         <h2>Contact</h2>
 
         <p>
-        For privacy-related questions, contact <strong><a href="mailto:help-wegig@proton.me?subject=WeGig%20Privacy%20Enquiry">help-wegig@proton.me</a></strong>.
+          For privacy-related questions, contact
+          <strong><a href="mailto:help-wegig@proton.me?subject=WeGig%20Privacy%20Enquiry">help-wegig@proton.me</a></strong>.
         </p>
 
         <h2>Updates</h2>
 
         <p>
-          This policy may be updated from time to time. The latest version will always be available on this page.
+          This policy may be updated from time to time. The latest version will always be available on this page. Where required, we will provide appropriate notice of material changes.
         </p>
       </section>
 
-      <footer>&copy; <span id="year"></span> WeGig. All rights reserved.</footer>
+      <footer>
+        &copy; <span id="year"></span> WeGig. All rights reserved.
+        <div class="footer-links">
+          <a href="/privacy/" aria-current="page">Privacy Policy</a>
+          <span aria-hidden="true">|</span>
+          <a href="/terms/">Terms &amp; Conditions</a>
+        </div>
+      </footer>
     </main>
   </div>
 
