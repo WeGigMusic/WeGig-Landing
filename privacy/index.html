@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -194,7 +193,7 @@
         <ul>
           <li>Sign-in information, account identifiers and the gig details you save. Your chosen profile name and photo are stored on your device.</li>
           <li>Location, if you grant permission, to suggest nearby gigs and venues. You can change this permission in your device settings.</li>
-          <li>App activity, such as screens and setlists viewed, and device information. We use PostHog for app analytics and link activity to an account identifier.</li>
+          <li>If you choose to share app usage analytics, information such as screens and setlists viewed, device characteristics, your account identifier and email address where available. We also record your analytics preference.</li>
           <li>Information you send us, such as feedback and support messages.</li>
           <li>If you make an optional contribution, Apple or Google processes the payment. We receive transaction details to verify the contribution, manage supporter status and handle refunds.</li>
         </ul>
@@ -205,7 +204,7 @@
           <li>To operate, maintain and improve the app and website.</li>
           <li>To provide your account, saved gig history and other requested features.</li>
           <li>To personalise your experience, including location-based recommendations.</li>
-          <li>To understand app performance, review feedback and prioritise new features.</li>
+          <li>To understand app usage through optional analytics, review feedback and prioritise new features.</li>
           <li>To verify contributions, manage refunds and prevent fraud.</li>
           <li>To protect the security and integrity of the service.</li>
           <li>To communicate with you if you contact us.</li>
@@ -221,7 +220,7 @@
         <ul>
           <li><strong>Contract:</strong> Where processing is necessary to provide your account and the services you request.</li>
           <li><strong>Legitimate interests:</strong> Where appropriate, to maintain security, prevent fraud, respond to enquiries and improve the service, taking account of your privacy rights.</li>
-          <li><strong>Consent:</strong> Where consent is required, including for relevant optional features and analytics. You may withdraw consent where processing relies on it.</li>
+          <li><strong>Consent:</strong> Where consent is required, including for optional app usage analytics. You may withdraw consent where processing relies on it.</li>
           <li><strong>Legal obligations:</strong> Where processing is necessary to comply with applicable accounting, tax or other legal requirements.</li>
         </ul>
 
@@ -249,14 +248,34 @@
           You can withdraw location permission through your device settings at any time. This may affect the availability or accuracy of nearby recommendations.
         </p>
 
-        <h2>Analytics</h2>
+        <h2 id="analytics">App analytics</h2>
 
         <p>
-          We use PostHog to understand how WeGig is used and identify opportunities to improve the app. This may include information about screens viewed, features used and device characteristics.
+          We use PostHog to understand how WeGig is used and help improve the app. App usage analytics are off by default in versions that include our analytics consent controls. We ask for your permission before enabling this optional collection.
         </p>
 
         <p>
-          Analytics activity may be associated with your WeGig account identifier. You may contact us to exercise your applicable data protection rights in relation to this information.
+          If you agree, we may collect information about screens viewed, features used, artist pages and setlists viewed, and device and app characteristics. This information may be linked to your WeGig account identifier and email address, where available, to help us understand usage and troubleshoot issues. This information is not anonymous.
+        </p>
+
+        <p>
+          We do not enable session replay or IP-based geographic enrichment for this app analytics integration. Network requests necessarily involve an IP address; our PostHog project is configured to discard client IP data rather than retain it with analytics events.
+        </p>
+
+        <p>
+          Sharing app usage analytics is entirely optional. Declining does not restrict your access to WeGig features. You can change your preference at any time under <strong>Profile</strong>, using the <strong>Share usage analytics</strong> setting. We store your preference against your account, including the version of consent and the time it was last updated.
+        </p>
+
+        <p>
+          Turning analytics off stops new collection on your device. If you are offline, your updated preference may need to synchronise before it takes effect on other devices. Withdrawal does not automatically delete information previously collected with your permission or affect the lawfulness of processing before withdrawal. You can contact us to request deletion of previously collected analytics.
+        </p>
+
+        <p>
+          Our PostHog project is configured with a 12-month analytics event retention period. Account-level analytics information may be subject to separate retention and deletion processes.
+        </p>
+
+        <p>
+          These controls relate to optional app usage analytics, rather than information necessary to operate your account, maintain security or process contributions. Older app versions may not include these controls.
         </p>
 
         <h2>Sharing information</h2>
