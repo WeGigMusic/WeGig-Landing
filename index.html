@@ -111,8 +111,7 @@
       margin-bottom: 20px;
     }
 
-    .store-buttons a,
-    .cta-button {
+    .store-buttons a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -127,8 +126,7 @@
       cursor: pointer;
     }
 
-    .store-buttons a:hover,
-    .cta-button:hover {
+    .store-buttons a:hover {
       transform: translateY(-1px);
       border-color: var(--accent-blue);
       box-shadow: 0 10px 30px rgba(15,23,42,0.9);
@@ -138,35 +136,6 @@
       height: 32px;
       width: auto;
       display: block;
-    }
-
-    .waitlist-section {
-      margin-top: 40px;
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.45);
-    }
-
-    .waitlist-section h2 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .waitlist-section p {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 18px;
-      line-height: 1.5;
-    }
-
-    .form-frame {
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      background: #fff;
-      height: 720px;
     }
 
     footer {
@@ -224,13 +193,6 @@
         height: 28px;
       }
 
-      .waitlist-section h2 {
-        font-size: 22px;
-      }
-
-      .form-frame {
-        height: 720px;
-      }
     }
   </style>
 </head>
@@ -259,24 +221,6 @@
         <a href="#"><img src="images/app-store-badge.png" alt="Download on the App Store" /></a>
         <a href="#"><img src="images/google-play-badge.png" alt="Get it on Google Play" /></a>
       </div>
-
-      <a href="#waitlist" class="cta-button">Join the Waitlist</a>
-
-      <section class="waitlist-section" id="waitlist">
-        <p>Be first to hear when WeGig launches and get early access updates.</p>
-
-        <iframe
-          class="form-frame"
-          src="https://docs.google.com/forms/d/e/1FAIpQLSdGLjDmio4SYUfj3e4EaWR7H6Gh7Qolqdgf0wQik-M9cXKmVw/viewform?embedded=true"
-          width="100%"
-          height="720"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0"
-          loading="lazy">
-          Loading…
-        </iframe>
-      </section>
 
       <footer>
         &copy; <span id="year"></span> WeGig. All rights reserved.
